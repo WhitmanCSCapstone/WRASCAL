@@ -29,6 +29,11 @@
         <v-btn @click="toggleTheme" icon>
           <v-icon :icon="themeModeSwitchIcon"/>
         </v-btn>
+
+        <v-btn @click="login">
+          Log In
+        </v-btn>
+
       </v-app-bar>
 
       <router-view v-slot="{ Component }">
@@ -82,10 +87,8 @@
           protons and various metal ions. Over 18,000 papers have been examined,
           representing over 99,000 metal-ligand systems, and only data which meet
           the criterion of well-documented, careful work were considered for
-          inclusion.
-        </div>
-
         <v-divider/>
+        </div>
 
         <div>
           {{ new Date().getFullYear() }} — <strong>NIST-46</strong>
@@ -93,14 +96,19 @@
       </v-footer>
     </v-main>
   </v-app>
+  <login-dialog v-model="loginDialogVisible"></login-dialog>
 </template>
 
 <script lang="ts">
 
 import { defineComponent } from 'vue'
 import { useTheme } from 'vuetify'
+import Login from './views/Login.vue'
 
 export default defineComponent({
+  components: {
+    Login
+  },
   setup () {
     const theme = useTheme()
     const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -125,9 +133,15 @@ export default defineComponent({
         name: 'About Us',
         to: '/about-us',
         icon: 'mdi-information'
+      },
+      {
+        name: 'Test',
+        to: '/new-entry',
+        icon: 'mdi-plus'
       }
     ],
-    drawer: false
+    drawer: false,
+    loginDialogVisible: false
   }),
   computed: {
     themeModeSwitchIcon(){
@@ -137,6 +151,10 @@ export default defineComponent({
     }
   },
   methods: {
+    login() {
+      this.loginDialogVisible = true;
+    },
+
     changeDrawerStatus(){
       this.drawer = !this.drawer
     }
