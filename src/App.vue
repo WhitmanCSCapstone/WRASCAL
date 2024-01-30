@@ -34,6 +34,10 @@
           Log In
         </v-btn>
 
+        <v-btn @click="register">
+          Register
+        </v-btn>
+
       </v-app-bar>
 
       <router-view v-slot="{ Component }">
@@ -144,6 +148,10 @@ export default defineComponent({
   methods: {
     login(){
       this.$router.push('/login')
+    },
+
+    register(){
+      this.$router.push('/register')
     },
 
     changeDrawerStatus(){

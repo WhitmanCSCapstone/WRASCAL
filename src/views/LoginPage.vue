@@ -1,6 +1,5 @@
 
 <template>
-  <v-sheet class="pa-12" rounded>
     <v-card class="mx-auto px-6 py-8" max-width="344">
       <v-form
         v-model="form"
@@ -40,7 +39,6 @@
         </v-btn>
       </v-form>
     </v-card>
-  </v-sheet>
 </template>
 <script>
   export default {
