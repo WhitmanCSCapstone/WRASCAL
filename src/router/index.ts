@@ -29,7 +29,7 @@ const routes = [
       {
         path: 'login',
         name: 'Log In',
-        component: () => import('@/views/Login.vue')
+        component: () => import('@/views/LoginPage.vue')
       },
       {
         path: 'new-entry',
