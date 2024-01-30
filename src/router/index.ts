@@ -29,7 +29,12 @@ const routes = [
       {
         path: 'login',
         name: 'Log In',
-        component: () => import('@/views/Login.vue')
+        component: () => import('@/views/LoginPage.vue')
+      },
+      {
+        path: 'register',
+        name: 'Register',
+        component: () => import('@/views/RegisterPage.vue')
       },
       {
         path: 'new-entry',
