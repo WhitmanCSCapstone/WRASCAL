@@ -1,5 +1,6 @@
 <template>
   <v-container class="pt-8">
+    <h1> New Ligand Submission </h1><br>
     <v-alert
       border="start"
       variant="tonal"
@@ -19,12 +20,12 @@
         md="12"
       >
         <v-text-field
-          label="Categories"
+          label="Ligand Name"
           prepend-icon="mdi-list-box-outline"
           variant="solo"
           :loading="isLoading ?? false"
-          @input="onCategoriesUpdate"
-          v-model:model-value="categoriesValue"
+          @input="onLigandNameUpdate"
+          v-model:model-value="ligandName"
         ></v-text-field>
       </v-col>
 
@@ -32,74 +33,47 @@
         cols="12"
         md="12"
       >
+        <!-- TODO: FIGURE OUT HOW TO ENTER CHEMICAL DATA!!!-->
         <v-text-field
-          label="Ligands"
-          prepend-icon="mdi-chemical-weapon"
+          label="Formula"
+          prepend-icon="mdi-flask"
           variant="solo"
           :loading="isLoading ?? false"
-          @input="onLigandsUpdate"
-          v-model:model-value="ligandsValue"
+          @input="onFormulaUpdate"
+          v-model:model-value="formulaValue"
         ></v-text-field>
       </v-col>
 
       <v-col
         cols="12"
-        md="12"
-      >
-        <v-text-field
-          label="Chemicals"
-          prepend-icon="mdi-bottle-tonic-skull-outline"
-          variant="solo"
-          :loading="isLoading ?? false"
-          @input="onChemicalsUpdate"
-          v-model:model-value="chemicalsValue"
-        ></v-text-field>
-      </v-col>
-
-      <v-col
-        cols="12"
-        md="4"
-      >
-        <v-text-field
-          label="Metals"
-          prepend-icon="mdi-soldering-iron"
-          variant="solo"
-          :loading="isLoading ?? false"
-          @input="onMetalsUpdate"
-          v-model:model-value="metalsValue"
-        ></v-text-field>
-      </v-col>
-
-      <v-col
-        cols="12"
-        md="4"
+        md="6"
       >
         <v-text-field
           label="Metal Charge"
           prepend-icon="mdi-flash"
           variant="solo"
           :loading="isLoading ?? false"
-          @input="onMetalChargesUpdate"
-          v-model:model-value="metalChargesValue"
+          @input="onMetalChargeUpdate"
+          v-model:model-value="metalChargeValue"
         ></v-text-field>
       </v-col>
 
       <v-col
         cols="12"
-        md="4"
+        md="6"
       >
         <v-text-field
           label="Ligand Charge"
           prepend-icon="mdi-lightning-bolt-outline"
           variant="solo"
           :loading="isLoading ?? false"
-          @input="onLigandChargesUpdate"
-          v-model:model-value="ligandChargesValue"
+          @input="onLigandChargeUpdate"
+          v-model:model-value="ligandChargeValue"
         ></v-text-field>
       </v-col>
     </v-row>
 
-    <v-btn type="submit" block class="mt-2" color="primary" @click="searchLigands">Submit</v-btn>
+    <v-btn type="submit" block class="mt-2" color="primary" @click="submitForm">Submit</v-btn>
   </v-container>
 </template>
 
@@ -107,66 +81,57 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: "AdvanceSearchForm",
+  name: "NewEntryForm",
   props: {
     isLoading: {
       type: Boolean,
       default: false
     },
-    ligands: {
+    ligandName: {
+      type: String,
+      default:''
+    },
+    formula: {
       type: String,
       default: ''
     },
-    metals: {
+    metalCharge: {
       type: String,
       default: ''
     },
-    categories: {
-      type: String,
-      default: ''
-    },
-    ligandCharges: {
-      type: String,
-      default: ''
-    },
-    metalCharges: {
-      type: String,
-      default: ''
-    },
-    chemicals: {
+    ligandCharge: {
       type: String,
       default: ''
     }
   },
   data: () => ({
-    ligandsValue: '',
-    metalsValue: '',
-    categoriesValue: '',
-    ligandChargesValue: '',
-    metalChargesValue: '',
-    chemicalsValue: ''
+    ligandNameValue: '',
+    formulaValue: '',
+    metalChargeValue: '',
+    ligandChargeValue: ''
   }),
   methods: {
-    searchLigands(){
-      this.$emit('onSearch')
+
+    onLigandNameUpdate(){
+      this.$emit('update:ligandName', this.ligandNameValue);
     },
-    onLigandsUpdate(){
-      this.$emit('update:ligands', this.ligandsValue);
+    
+    onFormulaUpdate() {
+      this.$emit('update:formula', this.formulaValue);
     },
-    onMetalsUpdate(){
-      this.$emit('update:metals', this.metalsValue);
+
+    onMetalChargeUpdate() {
+      this.$emit('update:metalCharge', this.metalChargeValue);
     },
-    onCategoriesUpdate(){
-      this.$emit('update:categories', this.categoriesValue);
+
+    onLigandChargeUpdate() {
+      this.$emit('update:ligandCharge', this.ligandChargeValue);
     },
-    onLigandChargesUpdate(){
-      this.$emit('update:ligandCharges', this.ligandChargesValue);
-    },
-    onMetalChargesUpdate(){
-      this.$emit('update:metalCharges', this.metalChargesValue);
-    },
-    onChemicalsUpdate(){
-      this.$emit('update:chemicals', this.chemicalsValue);
+    submitForm() {
+      console.log("ligand name: " + this.ligandNameValue);
+      console.log("formula: " + this.formula);
+      console.log("metalChargeValue: " + this.metalCharge);
+      console.log("ligand charge: " + this.ligandCharge);
     }
   }
 })

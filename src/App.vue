@@ -130,6 +130,11 @@ export default defineComponent({
         name: 'About Us',
         to: '/about-us',
         icon: 'mdi-information'
+      },
+      {
+        name: 'Enter',
+        to: '/new-entry',
+        icon: 'mdi-plus'
       }
     ],
     drawer: false
