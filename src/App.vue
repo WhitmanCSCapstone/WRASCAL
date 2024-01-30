@@ -29,6 +29,15 @@
         <v-btn @click="toggleTheme" icon>
           <v-icon :icon="themeModeSwitchIcon"/>
         </v-btn>
+
+        <v-btn @click="login">
+          Log In
+        </v-btn>
+
+        <v-btn @click="register">
+          Register
+        </v-btn>
+
       </v-app-bar>
 
       <router-view v-slot="{ Component }">
@@ -137,6 +146,14 @@ export default defineComponent({
     }
   },
   methods: {
+    login(){
+      this.$router.push('/login')
+    },
+
+    register(){
+      this.$router.push('/register')
+    },
+
     changeDrawerStatus(){
       this.drawer = !this.drawer
     }
