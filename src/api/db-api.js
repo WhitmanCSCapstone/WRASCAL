@@ -1,3 +1,5 @@
+// this is just for reference of the endpoints we need to migrate to flask
+
 const db = require('./db.js');
 const express = require('express');
 const cors = require('cors');
