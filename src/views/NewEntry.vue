@@ -25,7 +25,7 @@
           variant="solo"
           :loading="isLoading ?? false"
           @input="onLigandNameUpdate"
-          v-model:model-value="ligandName"
+          v-model:model-value="ligandNameValue"
         ></v-text-field>
       </v-col>
 
@@ -129,9 +129,9 @@ export default defineComponent({
     },
     submitForm() {
       console.log("ligand name: " + this.ligandNameValue);
-      console.log("formula: " + this.formula);
-      console.log("metalChargeValue: " + this.metalCharge);
-      console.log("ligand charge: " + this.ligandCharge);
+      console.log("formula: " + this.formulaValue);
+      console.log("metalChargeValue: " + this.metalChargeValue);
+      console.log("ligand charge: " + this.ligandChargeValue);
     }
   }
 })
