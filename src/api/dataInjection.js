@@ -26,7 +26,7 @@ app.post('/inject/metal', async (req, res) => {
     res.status(200).json({ message: 'Data inserted into metals table successfully' });
   } catch (error) {
     console.error('Error inserting data into metals table:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: `Internal server error ${error.message}` });
   }
 });
 
@@ -39,7 +39,7 @@ app.post('/inject/ligand', async (req, res) => {
     res.status(200).json({ message: 'Data inserted into ligands_mapping table successfully' });
   } catch (error) {
     console.error('Error inserting data into ligands_mapping table:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: `Internal server error ${error.message}` });
   }
 });
 
@@ -52,7 +52,7 @@ app.post('/inject/condition', async (req, res) => {
     res.status(200).json({ message: 'Data inserted into conditions table successfully' });
   } catch (error) {
     console.error('Error inserting data into conditions table:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: `Internal server error ${error.message}` });
   }
 });
 
