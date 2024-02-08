@@ -11,7 +11,6 @@
           prepend-icon="mdi-list-box-outline"
           variant="solo"
           :loading="isLoading ?? false"
-          @input="onEmailUpdate"
           v-model:model-value="emailValue"
         ></v-text-field>
       </v-col>
@@ -25,7 +24,6 @@
           prepend-icon="mdi-flask"
           variant="solo"
           :loading="isLoading ?? false"
-          @input="onPasswordUpdate"
           v-model:model-value="passwordValue"
           type="password"
         ></v-text-field>
@@ -40,7 +38,6 @@
           prepend-icon="mdi-flash"
           variant="solo"
           :loading="isLoading ?? false"
-          @input="onORCIDUpdate"
           v-model:model-value="ORCIDValue"
         ></v-text-field>
       </v-col>
