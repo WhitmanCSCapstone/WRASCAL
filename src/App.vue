@@ -156,7 +156,7 @@ export default defineComponent({
   },
   methods: {
     login() {
-      this.loginDialogVisible = true;
+      this.$router.push('/login')
     },
 
     register(){
