@@ -21,7 +21,7 @@
       >
         <v-text-field
           label="Password"
-          prepend-icon="mdi-flask"
+          prepend-icon="mdi-lock"
           variant="solo"
           :loading="isLoading ?? false"
           v-model:model-value="passwordValue"
