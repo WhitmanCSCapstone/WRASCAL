@@ -27,6 +27,7 @@
           :loading="isLoading ?? false"
           @input="onPasswordUpdate"
           v-model:model-value="passwordValue"
+          type="password"
         ></v-text-field>
       </v-col>
 
@@ -93,7 +94,6 @@ export default defineComponent({
     async submitForm() {
       const supabase = new SupabaseClient('https://eauyarvlibdxezijtoyx.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVhdXlhcnZsaWJkeGV6aWp0b3l4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDE0NjQ3NDcsImV4cCI6MjAxNzA0MDc0N30.3u320_sLG2xIyXRRVs4_TyO44w9kc0TJnhaLja5JyAA')
       try {
-        // Use the Supabase provided method to handle the signup
         const { error } = await supabase.auth.signUp({
           email: this.emailValue,
           password: this.passwordValue,
