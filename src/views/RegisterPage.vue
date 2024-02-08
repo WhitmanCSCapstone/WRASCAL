@@ -1,89 +1,108 @@
 <template>
-  <v-card class="mx-auto" max-width="344" title="User Registration">
-    <v-container>
-      <v-text-field
-        v-model="first"
-        color="primary"
-        label="First name"
-        variant="underlined">
-      </v-text-field>
+  <v-container class="pt-8">
+    <h1> Sign Up </h1><br>
+    <v-row class="pt-8">
+      <v-col
+        cols="12"
+        md="12"
+      >
+        <v-text-field
+          label="Email"
+          prepend-icon="mdi-list-box-outline"
+          variant="solo"
+          :loading="isLoading ?? false"
+          @input="onEmailUpdate"
+          v-model:model-value="emailValue"
+        ></v-text-field>
+      </v-col>
 
-      <v-text-field
-        v-model="last"
-        color="primary"
-        label="Last name"
-        variant="underlined">
-      </v-text-field>
+      <v-col
+        cols="12"
+        md="12"
+      >
+        <v-text-field
+          label="Password"
+          prepend-icon="mdi-flask"
+          variant="solo"
+          :loading="isLoading ?? false"
+          @input="onPasswordUpdate"
+          v-model:model-value="passwordValue"
+          type="password"
+        ></v-text-field>
+      </v-col>
 
-      <v-text-field
-        v-model="email"
-        color="primary"
-        label="Email"
-        variant="underlined">
-      </v-text-field>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <v-text-field
+          label="ORCID"
+          prepend-icon="mdi-flash"
+          variant="solo"
+          :loading="isLoading ?? false"
+          @input="onORCIDUpdate"
+          v-model:model-value="ORCIDValue"
+        ></v-text-field>
+      </v-col>
 
-      <v-text-field
-        v-model="password"
-        color="primary" label="Password"
-        placeholder="Enter your password"
-        variant="underlined">
-      </v-text-field>
+      <v-col
+        cols="12"
+        md="6"
+      >
+      </v-col>
+    </v-row>
 
-      <v-text-field
-        v-model="orcid"
-        color="primary"
-        label="ORCID number (optional)"
-        variant="underlined">
-      </v-text-field>
-    </v-container>
-
-    <v-card-actions>
-      <v-btn :disabled="!form" :loading="loading" block @click="handleSignUp" color="primary" size="large" type="submit" variant="elevated">
-        Register
-      </v-btn>
-    </v-card-actions>
-  </v-card>
+    <v-btn type="submit" block class="mt-2" color="primary" @click="submitForm">Submit</v-btn>
+  </v-container>
 </template>
+
 <script lang="ts">
-import { createClient } from '@supabase/supabase-js';
-import { ref } from 'vue';
+import { defineComponent } from 'vue'
+import { SupabaseClient } from '@supabase/supabase-js';
 
-const supabase = createClient('https://eauyarvlibdxezijtoyx.supabase.co', 'public-anon-key');
-
-const first = ref(null)
-const last = ref(null)
-const email = ref(null)
-const password = ref(null)
-const orcid = ref(null)
-
-const handleSignUp = async () => {
-  try {
-    const { data, error } = await supabase.auth.signUp(
-      {
-        email: email.value || '',
-        password: password.value || '',
-        options: {
-          data: {
-            orcid: orcid.value,
-          }
-        }
-      }
-    )
-  }
-  catch (error) {
-    console.error('Error signing up:', error as Error);
-  }
-}
-
-export default {
+export default defineComponent({
+  name: "NewEntryForm",
+  props: {
+    isLoading: {
+      type: Boolean,
+      default: false
+    },
+    email: {
+      type: String,
+      default:''
+    },
+    formula: {
+      type: String,
+      default: ''
+    },
+    metalCharge: {
+      type: String,
+      default: ''
+    },
+    ligandCharge: {
+      type: String,
+      default: ''
+    }
+  },
   data: () => ({
-    first: null,
-    last: null,
-    email: null,
-    password: null,
-    orcid: null,
-    terms: false,
+    emailValue: '',
+    passwordValue: '',
+    ORCIDValue: '',
+    ligandChargeValue: ''
   }),
-}
-
+  methods: {
+    async submitForm() {
+      const supabase = new SupabaseClient('https://eauyarvlibdxezijtoyx.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVhdXlhcnZsaWJkeGV6aWp0b3l4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDE0NjQ3NDcsImV4cCI6MjAxNzA0MDc0N30.3u320_sLG2xIyXRRVs4_TyO44w9kc0TJnhaLja5JyAA')
+      try {
+        const { error } = await supabase.auth.signUp({
+          email: this.emailValue,
+          password: this.passwordValue,
+        });
+        if (error) throw error;
+      } catch (error) {
+          console.log('Error: ', error)
+      }
+    }
+  }
+})
 </script>
