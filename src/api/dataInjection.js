@@ -8,17 +8,14 @@ const app = express();
 
 // PostgreSQL connection configuration
 const pool = new Pool({
-  user: 'your_postgres_user',
-  host: 'your_postgres_host',
-  database: 'your_postgres_database',
-  password: 'your_postgres_password',
+  user: 'postgres.eauyarvlibdxezijtoyx',
+  host: 'aws-0-us-west-1.pooler.supabase.com',
+  database: 'postgres',
+  password: 'QQDfWWErfbeYvumh',
   port: 5432,
 });
 
 app.use(express.json());
-
-// Serve static files from the "public" directory
-app.use(express.static(path.join(__dirname, 'public')));
 
 // Define the port number
 const port = 3003; // Set the port number to 3000 or any other available port
@@ -26,16 +23,17 @@ const port = 3003; // Set the port number to 3000 or any other available port
 // Route to handle POST request to insert data into the 'metals' table
 app.post('/metals', async (req, res) => {
   try {
-    const { legacy_string, charge } = req.body;
+    const { id, central_element,formula_string, charge } = req.body;
 
     // Insert data into the 'metals' table
-    const query = 'INSERT INTO metals (legacy_string, charge) VALUES ($1, $2)';
-    await pool.query(query, [legacy_string, charge]);
+    const query = `INSERT INTO metals_user_gen (id, central_element, formula_string, charge) VALUES (${id}, '${central_element}', '${formula_string}', ${charge})`;
+    console.log(query);
+    await pool.query(query);
 
     res.status(201).send('Data inserted into metals table successfully');
   } catch (error) {
     console.error('Error inserting data into metals table:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).send('Internal Server Error:', error);
   }
 });
 
