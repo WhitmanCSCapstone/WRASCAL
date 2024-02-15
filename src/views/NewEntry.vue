@@ -166,7 +166,7 @@ export default defineComponent({
         ligandCharge: this.ligandChargeValue
       };
 
-      postJSON(data)
+      postJSON(data);
     }
   }
 })
