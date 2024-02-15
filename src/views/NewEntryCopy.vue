@@ -3,7 +3,7 @@ import Dropdown from 'primevue/dropdown';
 <template>
   <v-container class="pt-8">
     <h1> New Ligand Submission </h1><br>
-    <!-- <v-alert
+    <v-alert
       border="start"
       variant="tonal"
       type="info"
@@ -14,21 +14,25 @@ import Dropdown from 'primevue/dropdown';
     >
       All the fields below support multiple entries, you can input one or more entries split by: <b>,</b>
       For example: Fe, H, Ca
-    </v-alert> -->
+    </v-alert>
 
     <v-row class="pt-8">
       <v-col
         cols="6"
         md="12"
       >
-        <v-text-field
+        <!-- <v-text-field
           label="Metal"
-          prepend-icon="mdi-gold"
+          prepend-icon="mdi-list-box-outline"
           variant="solo"
           :loading="isLoading ?? false"
           @input="onLigandNameUpdate"
           v-model:model-value="ligandNameValue"
-        ></v-text-field>
+        ></v-text-field> -->
+        <v-select
+          label="Metal"
+          prepend-icon="mdi-gold"
+          variant
       </v-col>
 
       <v-col
@@ -75,36 +79,12 @@ import Dropdown from 'primevue/dropdown';
       </v-col>
     </v-row>
 
-    <v-btn id="sumbitbutton" type="submit" block class="mt-2" color="primary" @click="submitForm">Submit</v-btn>
+    <v-btn type="submit" block class="mt-2" color="primary" @click="submitForm">Submit</v-btn>
   </v-container>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-
-interface dataEntry {
-  ligandName: string,
-  formula: string,
-  metalCharge: string,
-  ligandCharge: string
-}
-
-async function postJSON(data: dataEntry) {
-  try {
-    const response = await fetch("<YOUR ENDPOINT HERE!!!>", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    const result = await response.json();
-    console.log("Success:", result);
-  } catch (error) {
-    console.error("Error:", error);
-  }
-}
 
 export default defineComponent({
   name: "NewEntryForm",
@@ -137,6 +117,7 @@ export default defineComponent({
     ligandChargeValue: ''
   }),
   methods: {
+
     onLigandNameUpdate(){
       this.$emit('update:ligandName', this.ligandNameValue);
     },
@@ -153,20 +134,10 @@ export default defineComponent({
       this.$emit('update:ligandCharge', this.ligandChargeValue);
     },
     submitForm() {
-      
       console.log("ligand name: " + this.ligandNameValue);
       console.log("formula: " + this.formulaValue);
       console.log("metalChargeValue: " + this.metalChargeValue);
       console.log("ligand charge: " + this.ligandChargeValue);
-
-      const data: dataEntry = {
-        ligandName: this.ligandNameValue,
-        formula: this.formulaValue,
-        metalCharge: this.metalChargeValue,
-        ligandCharge: this.ligandChargeValue
-      };
-
-      postJSON(data)
     }
   }
 })
