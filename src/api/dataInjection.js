@@ -20,52 +20,27 @@ app.use(express.json());
 // Define the port number
 const port = 3003; // Set the port number to 3000 or any other available port
 
-// Route to handle POST request to insert data into the 'metals' table
-app.post('/metals', async (req, res) => {
+// Route to handle POST request to insert data into multiple tables
+app.post('/insertData', async (req, res) => {
   try {
-    const { id, central_element,formula_string, charge } = req.body;
+    const { metalsData, conditionsData, ligandsData } = req.body;
 
     // Insert data into the 'metals' table
-    const query = `INSERT INTO metals_user_gen (id, central_element, formula_string, charge) VALUES (${id}, '${central_element}', '${formula_string}', ${charge})`;
-    console.log(query);
-    await pool.query(query);
-
-    res.status(201).send('Data inserted into metals table successfully');
-  } catch (error) {
-    console.error('Error inserting data into metals table:', error);
-    res.status(500).send('Internal Server Error:', error);
-  }
-});
-
-// Route to handle POST request to insert data into the 'ligands_mapping' table
-app.post('/ligands', async (req, res) => {
-  try {
-    const { LigandName, LigandFormula, LigandProtonation } = req.body;
-
-    // Insert data into the 'ligands_mapping' table
-    const query = 'INSERT INTO ligands_mapping (LigandName, LigandFormula, LigandProtonation) VALUES ($1, $2, $3)';
-    await pool.query(query, [LigandName, LigandFormula, LigandProtonation]);
-
-    res.status(201).send('Data inserted into ligands_mapping table successfully');
-  } catch (error) {
-    console.error('Error inserting data into ligands_mapping table:', error);
-    res.status(500).send('Internal Server Error');
-  }
-});
-
-// Route to handle POST request to insert data into the 'conditions' table
-app.post('/conditions', async (req, res) => {
-  try {
-    const { temperature, ionic_strength } = req.body;
+    const metalsQuery = 'INSERT INTO metals_user_gen (id, central_element, formula_string, charge) VALUES (${id}, ${central_element}, ${formula_string}, ${charge})';
+    await pool.query(metalsQuery, [metalsData.id, metalsData.central_element, metalsData.formula_string, metalsData.charge]);
 
     // Insert data into the 'conditions' table
-    const query = 'INSERT INTO conditions (temperature, ionic_strength) VALUES ($1, $2)';
-    await pool.query(query, [temperature, ionic_strength]);
+    const conditionsQuery = 'INSERT INTO conditions_user_gen (id, temperature, ionic_strength) VALUES (${id}, ${temperature}, ${ionic_strength})';
+    await pool.query(conditionsQuery, [conditionsData.id, conditionsData.temperature, conditionsData.ionic_strength]);
 
-    res.status(201).send('Data inserted into conditions table successfully');
+    // Insert data into the 'ligands_mapping' table
+    const ligandsQuery = 'INSERT INTO ligands_mapping_user_gen (id, LigandName, LigandFormula, LigandProtonation) VALUES (${id}, ${LigandName}, ${LigandProtonation}, $4)';
+    await pool.query(ligandsQuery, [ligandsData.id, ligandsData.LigandName, ligandsData.LigandFormula, ligandsData.LigandProtonation]);
+
+    res.status(201).send('Data inserted into all tables successfully');
   } catch (error) {
-    console.error('Error inserting data into conditions table:', error);
-    res.status(500).send('Internal Server Error');
+    console.error('Error inserting data:', error);
+    res.status(500).send('Internal Server Error', error);
   }
 });
 
