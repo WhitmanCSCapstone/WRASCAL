@@ -231,9 +231,14 @@ interface dataEntry {
   referenceDOIValue: String
 }
 
+interface metalEntry {
+  metalName: String,
+  legacy_string: String
+}
+
 async function postJSON(data: dataEntry) {
   try {
-    const response = await fetch("localhost:3000/new-entry", {
+    const response = await fetch("localhost:3003/metals", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -373,9 +378,8 @@ export default defineComponent({
     },
     submitForm() {
 
-      this.$emit('update:isLoading', true)
-      
-
+      // this.$emit('update:isLoading', true)
+    
       const data: dataEntry = {
         metalName: this.metalNameValue,
         metalCharge: this.metalChargeValue,
@@ -393,9 +397,16 @@ export default defineComponent({
         referenceDOIValue: this.DOIValue
       };
 
+      const metalData: metalEntry = {
+        metalName: this.metalNameValue,
+        legacy_string: this.metalChargeValue
+      }
+    
+      console.log("what if we kissed")
       console.log("data: " + JSON.stringify(data))
 
       postJSON(data);
+      postJson
     }
   }
 })
