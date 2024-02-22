@@ -2,6 +2,7 @@
 const express = require('express');
 const { Pool } = require('pg');
 const path = require('path'); // Import the 'path' module
+const cors = require('cors');
 
 // Create an Express application
 const app = express();
@@ -16,6 +17,7 @@ const pool = new Pool({
 });
 
 app.use(express.json());
+app.use(cors());
 
 // Define the port number
 const port = 3003; // Set the port number to 3000 or any other available port
@@ -23,11 +25,11 @@ const port = 3003; // Set the port number to 3000 or any other available port
 // Route to handle POST request to insert data into the 'metals' table
 app.post('/metals', async (req, res) => {
   try {
-    const { id, central_element,formula_string, charge } = req.body;
+    console.log(req);
+    const { id, metalName, formula_string, charge } = req.body;
 
     // Insert data into the 'metals' table
-    const query = `INSERT INTO metals_user_gen (id, central_element, formula_string, charge) VALUES (${id}, '${central_element}', '${formula_string}', ${charge})`;
-    console.log(query);
+    const query = `INSERT INTO metals_user_gen ( id, central_element, formula_string, charge) VALUES (${id}, '${metalName}', '${formula_string}', ${charge})`;
     await pool.query(query);
 
     res.status(201).send('Data inserted into metals table successfully');

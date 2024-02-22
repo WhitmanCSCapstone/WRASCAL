@@ -232,13 +232,15 @@ interface dataEntry {
 }
 
 interface metalEntry {
+  id: Number,
   metalName: String,
-  legacy_string: String
+  formula_string: String,
+  charge: Number
 }
 
-async function postJSON(data: dataEntry) {
+async function postJSON(data: metalEntry) {
   try {
-    const response = await fetch("localhost:3003/metals", {
+    const response = await fetch("http://localhost:3003/metals", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -398,15 +400,17 @@ export default defineComponent({
       };
 
       const metalData: metalEntry = {
+        id: 867,
         metalName: this.metalNameValue,
-        legacy_string: this.metalChargeValue
+        formula_string: this.ligandFormulaValue,
+        charge: 20
       }
     
       console.log("what if we kissed")
-      console.log("data: " + JSON.stringify(data))
+      console.log("data: " + JSON.stringify(metalData))
 
-      postJSON(data);
-      postJson
+      //postJSON(data);
+      postJSON(metalData);
     }
   }
 })
