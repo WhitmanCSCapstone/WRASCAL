@@ -34,7 +34,7 @@ app.post('/insertData', async (req, res) => {
     await pool.query(conditionsQuery, [conditionsData.id, conditionsData.temperature, conditionsData.ionic_strength]);
 
     // Insert data into the 'ligands_mapping' table
-    const ligandsQuery = 'INSERT INTO ligands_mapping_user_gen (id, LigandName, LigandFormula, LigandProtonation) VALUES (${id}, ${LigandName}, ${LigandProtonation}, $4)';
+    const ligandsQuery = 'INSERT INTO ligands_mapping_user_gen (id, LigandName, LigandFormula, LigandProtonation) VALUES (${id}, ${LigandName}, ${LigandFormula}, ${LigandProtonation})';
     await pool.query(ligandsQuery, [ligandsData.id, ligandsData.LigandName, ligandsData.LigandFormula, ligandsData.LigandProtonation]);
 
     res.status(201).send('Data inserted into all tables successfully');
