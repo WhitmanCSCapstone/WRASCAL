@@ -105,6 +105,7 @@
 
 <script lang="ts">
 
+
 import { defineComponent } from 'vue'
 import { useTheme } from 'vuetify'
 import Login from './views/Login.vue'
@@ -139,7 +140,8 @@ export default defineComponent({
         icon: 'mdi-information'
       },
       {
-        name: 'Test',
+        name: 'Enter',
+
         to: '/new-entry',
         icon: 'mdi-plus'
       }
