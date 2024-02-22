@@ -30,6 +30,11 @@
           <v-icon :icon="themeModeSwitchIcon"/>
         </v-btn>
 
+        <v-btn v-if="isLoggedIn" @click="logout">
+          Log Out
+        </v-btn>
+
+        <div v-else>
         <v-btn @click="login">
           Log In
         </v-btn>
@@ -37,6 +42,7 @@
         <v-btn @click="register">
           Register
         </v-btn>
+        </div>
 
       </v-app-bar>
 
@@ -118,9 +124,12 @@ export default defineComponent({
     const theme = useTheme()
     const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
 
+    const isLoggedIn = window.localStorage.getItem("sb-eauyarvlibdxezijtoyx-auth-token") !== null
+
     theme.global.name.value = isDark ? 'dark' : 'light'
 
     return {
+      isLoggedIn,
       theme,
       toggleTheme: () => {
         theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
