@@ -232,13 +232,34 @@ interface dataEntry {
 }
 
 interface metalEntry {
-  metalName: String,
-  legacy_string: String
+  id: Number,
+  central_element: String,
+  formula_string: String,
+  charge: Number
 }
 
-async function postJSON(data: dataEntry) {
+interface conditionEntry {
+  id: Number,
+  temperature: String,
+  ionic_strength: String
+}
+
+interface ligandsEntry {
+  id: Number,
+  LigandName: String
+  LigandFormula: String,
+  LigandProtonation: String
+}
+
+interface DataEntryPlus {
+  metal: metalEntry,
+  conditions: conditionEntry,
+  ligands: ligandsEntry
+}
+
+async function postJSON(data: DataEntryPlus) {
   try {
-    const response = await fetch("localhost:3003/metals", {
+    const response = await fetch("http://localhost:3003/insertData", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -380,7 +401,7 @@ export default defineComponent({
 
       // this.$emit('update:isLoading', true)
     
-      const data: dataEntry = {
+      const allVars: dataEntry = {
         metalName: this.metalNameValue,
         metalCharge: this.metalChargeValue,
         ligandName: this.ligandNameValue,
@@ -397,16 +418,38 @@ export default defineComponent({
         referenceDOIValue: this.DOIValue
       };
 
+
       const metalData: metalEntry = {
-        metalName: this.metalNameValue,
-        legacy_string: this.metalChargeValue
+        id: 999,
+        central_element: this.metalNameValue,
+        formula_string: this.ligandFormulaValue,
+        charge: 999
       }
-    
+
+      const conditionsData: conditionEntry = {
+        id: 999,
+        temperature: this.temperatureValue,
+        ionic_strength: this.ionicStrengthValue
+      }
+
+      const ligandsData: ligandsEntry = {
+        id: 999,
+        LigandName: this.ligandNameValue,
+        LigandFormula: this.ligandFormulaValue,
+        LigandProtonation: this.protonationLevelValue
+      }
+
+      const data: DataEntryPlus = {
+        metal: metalData,
+        conditions: conditionsData,
+        ligands: ligandsData
+      }
+
       console.log("what if we kissed")
       console.log("data: " + JSON.stringify(data))
 
+      //postJSON(data);
       postJSON(data);
-      postJson
     }
   }
 })

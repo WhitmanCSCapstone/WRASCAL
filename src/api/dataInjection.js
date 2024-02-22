@@ -2,6 +2,7 @@
 const express = require('express');
 const { Pool } = require('pg');
 const path = require('path'); // Import the 'path' module
+const cors = require('cors');
 
 // Create an Express application
 const app = express();
@@ -16,6 +17,7 @@ const pool = new Pool({
 });
 
 app.use(express.json());
+app.use(cors());
 
 // Define the port number
 const port = 3003; // Set the port number to 3000 or any other available port
@@ -24,17 +26,21 @@ const port = 3003; // Set the port number to 3000 or any other available port
 app.post('/insertData', async (req, res) => {
   try {
     const { metalsData, conditionsData, ligandsData } = req.body;
+    console.log(metalsData)
+    console.log(conditionsData)
+    console.log(ligandsData)
 
     // Insert data into the 'metals' table
-    const metalsQuery = 'INSERT INTO metals_user_gen (id, central_element, formula_string, charge) VALUES (${id}, ${central_element}, ${formula_string}, ${charge})';
+    const metalsQuery = `INSERT INTO metals_user_gen (id, central_element, formula_string, charge) VALUES (${id}, '${central_element}', '${formula_string}', ${charge})`;
+    console.log(metalsQuery);
     await pool.query(metalsQuery, [metalsData.id, metalsData.central_element, metalsData.formula_string, metalsData.charge]);
 
     // Insert data into the 'conditions' table
-    const conditionsQuery = 'INSERT INTO conditions_user_gen (id, temperature, ionic_strength) VALUES (${id}, ${temperature}, ${ionic_strength})';
+    const conditionsQuery = `INSERT INTO conditions_user_gen (id, temperature, ionic_strength) VALUES (${id}, ${temperature}, ${ionic_strength})`;
     await pool.query(conditionsQuery, [conditionsData.id, conditionsData.temperature, conditionsData.ionic_strength]);
 
     // Insert data into the 'ligands_mapping' table
-    const ligandsQuery = 'INSERT INTO ligands_mapping_user_gen (id, LigandName, LigandFormula, LigandProtonation) VALUES (${id}, ${LigandName}, ${LigandProtonation}, $4)';
+    const ligandsQuery = `INSERT INTO ligands_mapping_user_gen (id, LigandName, LigandFormula, LigandProtonation) VALUES (${id}, ${LigandName}, ${LigandFormula}, ${LigandProtonation})`;
     await pool.query(ligandsQuery, [ligandsData.id, ligandsData.LigandName, ligandsData.LigandFormula, ligandsData.LigandProtonation]);
 
     res.status(201).send('Data inserted into all tables successfully');
