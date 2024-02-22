@@ -30,7 +30,7 @@
           <v-icon :icon="themeModeSwitchIcon"/>
         </v-btn>
 
-        <v-btn v-if="isLoggedIn" @click="logout">
+        <v-btn v-if="isLoggedIn" @click="logOut">
           Log Out
         </v-btn>
 
@@ -114,6 +114,7 @@
 
 import { defineComponent } from 'vue'
 import { useTheme } from 'vuetify'
+import { SupabaseClient } from '@supabase/supabase-js'
 import Login from './views/Login.vue'
 
 export default defineComponent({
@@ -168,6 +169,11 @@ export default defineComponent({
   methods: {
     login() {
       this.$router.push('/login')
+    },
+
+    logOut() {
+      const supabase = new SupabaseClient('https://eauyarvlibdxezijtoyx.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVhdXlhcnZsaWJkeGV6aWp0b3l4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDE0NjQ3NDcsImV4cCI6MjAxNzA0MDc0N30.3u320_sLG2xIyXRRVs4_TyO44w9kc0TJnhaLja5JyAA')
+      supabase.auth.signOut()
     },
 
     register(){
