@@ -31,6 +31,15 @@ import Dropdown from 'primevue/dropdown';
           v-model:model-value="metalChargeValue"
         ></v-text-field>
       </v-col>
+      <!----<v-col
+        cols="12"
+        md="6"
+      >
+      <v-combobox
+        label="Metal Select"
+      ></v-combobox>
+    
+      </v-col> -->
     </v-row>
 
     <h2> Ligand Information</h2>
@@ -363,6 +372,9 @@ export default defineComponent({
       this.$emit('update:DOI', this.DOIValue);
     },
     submitForm() {
+
+      this.$emit('update:isLoading', true)
+      
 
       const data: dataEntry = {
         metalName: this.metalNameValue,
