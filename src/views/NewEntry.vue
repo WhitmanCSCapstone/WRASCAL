@@ -215,10 +215,11 @@ import Dropdown from 'primevue/dropdown';
 import { defineComponent } from 'vue'
 
 interface dataEntry {
+  id: Number,
   metalName: String,
   metalCharge: String,
   ligandName: String,
-  ligandFormua: String,
+  ligandFormula: String,
   ligandFile: String,
   protonationLevel: String,
   constantType: String,
@@ -229,32 +230,6 @@ interface dataEntry {
   value: String,
   referenceEntryCode: String,
   referenceDOIValue: String
-}
-
-interface metalEntry {
-  id: Number,
-  central_element: String,
-  formula_string: String,
-  charge: Number
-}
-
-interface conditionEntry {
-  id: Number,
-  temperature: String,
-  ionic_strength: String
-}
-
-interface ligandsEntry {
-  id: Number,
-  LigandName: String
-  LigandFormula: String,
-  LigandProtonation: String
-}
-
-interface DataEntryPlus {
-  metal: metalEntry,
-  conditions: conditionEntry,
-  ligands: ligandsEntry
 }
 
 async function postJSON(data: DataEntryPlus) {
@@ -402,10 +377,11 @@ export default defineComponent({
       // this.$emit('update:isLoading', true)
     
       const allVars: dataEntry = {
+        id: 999,
         metalName: this.metalNameValue,
         metalCharge: this.metalChargeValue,
         ligandName: this.ligandNameValue,
-        ligandFormua: this.ligandFormulaValue,
+        ligandFormula: this.ligandFormulaValue,
         ligandFile: this.ligandFileValue,
         protonationLevel: this.protonationLevelValue,
         constantType: this.constantTypeValue,
@@ -418,38 +394,8 @@ export default defineComponent({
         referenceDOIValue: this.DOIValue
       };
 
-
-      const metalData: metalEntry = {
-        id: 999,
-        central_element: this.metalNameValue,
-        formula_string: this.ligandFormulaValue,
-        charge: 999
-      }
-
-      const conditionsData: conditionEntry = {
-        id: 999,
-        temperature: this.temperatureValue,
-        ionic_strength: this.ionicStrengthValue
-      }
-
-      const ligandsData: ligandsEntry = {
-        id: 999,
-        LigandName: this.ligandNameValue,
-        LigandFormula: this.ligandFormulaValue,
-        LigandProtonation: this.protonationLevelValue
-      }
-
-      const data: DataEntryPlus = {
-        metal: metalData,
-        conditions: conditionsData,
-        ligands: ligandsData
-      }
-
-      console.log("what if we kissed")
-      console.log("data: " + JSON.stringify(data))
-
       //postJSON(data);
-      postJSON(data);
+      postJSON(allVars);
     }
   }
 })
