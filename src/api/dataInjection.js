@@ -63,7 +63,7 @@ app.post('/insertData', async (req, res) => {
     await pool.query(metalsQuery);
 
     // Insert data into the 'conditions' table
-    const conditionsQuery = `INSERT INTO conditions_user_gen (id, temperature, ionic_strength) VALUES (${id}, ${temperature}, ${ionicStrength})`;
+    const conditionsQuery = `INSERT INTO userGeneratedContent.conditions_user_gen (id, temperature, ionic_strength) VALUES (${id}, ${temperature}, ${ionicStrength})`;
     await pool.query(conditionsQuery);
 
     // Insert data into the 'ligands_mapping' table
