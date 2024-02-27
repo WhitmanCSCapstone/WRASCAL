@@ -1,4 +1,5 @@
-# default
+# WRASCAL
+Back end repo: [WhitmanCSCapstone/wrascal-ts-2024](https://github.com/WhitmanCSCapstone/wrascal-ts-2024)
 
 ## Project setup
 
