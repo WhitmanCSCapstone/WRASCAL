@@ -1,6 +1,15 @@
 # WRASCAL
 Back end repo: [WhitmanCSCapstone/wrascal-ts-2024](https://github.com/WhitmanCSCapstone/wrascal-ts-2024)
 
+## Deployment
+To change the base url of the backend, modify the string inside the `baseURL` variable in `src/axiosClient.ts`
+
+``` ts
+const axiosClient = axios.create({
+  baseURL: import.meta.env.VITE_BACKEND_ADDR ?? "http://127.0.0.1:8083/rest"
+})
+```
+
 ## Project setup
 
 ```
