@@ -76,7 +76,7 @@ import { defineComponent } from 'vue'
 import MetalInfo from "../components/DataEntry/MetalInfo.vue"
 import ConditionsInfo from "../components/DataEntry/ConditionsInfo.vue"
 
-
+// will become own file eventually
 interface writeRequest {
   metal_central_element: string;
   metal_formula_string: string;
@@ -91,7 +91,7 @@ interface writeRequest {
 // repository, under src/controllers/rest/api/WriteController.ts
 async function postJSON(data: writeRequest) {
   try {
-    const response = await fetch("http://0.0.0.0:8083/rest/write/db", {
+    const response = await fetch("http://0.0.0.0:8083/rest/write/db", { // change before deoloy
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -116,7 +116,7 @@ export default defineComponent({
   },
   components:{ MetalInfo , ConditionsInfo},
   data: () => ({
-    // ALL DATA IS PREFIXED_ with the component it came from!
+    // all data is prefixed_ with the component it came from!
 
     // metal information
     metal_central_element: '',
@@ -147,10 +147,12 @@ export default defineComponent({
       console.log(JSON.stringify(writeData))
       postJSON(writeData);
     },
+
     updateField(input: {fieldToChange: String, dataToSend: any}) {
-      // doing this should make alan turing revive and call a hit on you
+      // I should be sent to live on a butterfly farm for this line
       this.$data[input.fieldToChange] = input.dataToSend
     },
+
     testMethod() {
       console.log("button pushed")
       this.conditions_constant_kind = 'yarr'
