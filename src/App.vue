@@ -115,11 +115,9 @@
 import { defineComponent } from 'vue'
 import { useTheme } from 'vuetify'
 import { SupabaseClient } from '@supabase/supabase-js'
-import Login from './views/Login.vue'
 
 export default defineComponent({
   components: {
-    Login
   },
   setup () {
     const theme = useTheme()
