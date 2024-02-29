@@ -1,5 +1,5 @@
 # WRASCAL
-Back end repo: [WhitmanCSCapstone/wrascal-ts-2024](https://github.com/WhitmanCSCapstone/wrascal-ts-2024)
+Backend repo: [WhitmanCSCapstone/wrascal-ts-2024](https://github.com/WhitmanCSCapstone/wrascal-ts-2024)
 
 ## Deployment
 To change the base url of the backend, modify the string inside the `baseURL` variable in `src/axiosClient.ts`
