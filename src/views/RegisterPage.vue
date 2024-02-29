@@ -52,9 +52,9 @@
       >
       </v-col>
     </v-row>
-    </form>
 
     <v-btn type="submit" block class="mt-2" color="primary" @click="submitForm">Submit</v-btn>
+    </form>
   </v-container>
 </template>
 
