@@ -1,6 +1,7 @@
 <template>
   <v-container class="pt-8">
     <h1> Log In</h1><br>
+    <form @submit.prevent="submitForm">
     <v-row class="pt-8">
       <v-col
         cols="12"
@@ -41,8 +42,8 @@
       >
       </v-col>
     </v-row>
-
     <v-btn type="submit" block class="mt-2" color="primary" @click="submitForm">Submit</v-btn>
+    </form>
   </v-container>
 </template>
 
