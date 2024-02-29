@@ -1,4 +1,5 @@
 <template>
+    <h2> Conditions Information </h2>
     <v-row class="pt-8">
         <v-col
         cols="12"

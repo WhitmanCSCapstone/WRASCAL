@@ -1,19 +1,58 @@
 <template>
     <h2> Metal Information </h2>
         <v-row class="pt-8">
-          <v-col
+            <v-col
             cols="12"
             md="2"
-          >
-          <v-text-field
-            label="Metal ID for fakers"
-            prepend-icon="mdi-gold"
-            variant="solo"
-            :loading="isLoading ?? false"
-            @input="onMetalIdUpdate"
-            v-model:model-value="metal_id"
-            ></v-text-field>
-          </v-col>
+            >
+                <v-text-field
+                label="Metal ID for fakers"
+                prepend-icon="mdi-gold"
+                variant="solo"
+                :loading="isLoading ?? false"
+                @change="entry('metal_id', metal_id)"
+                v-model:model-value="metal_id"
+                ></v-text-field>
+            </v-col>
+            <v-col
+            cols="12"
+            md="2"
+            >
+                <v-text-field
+                label="Central Element"
+                prepend-icon="mdi-gold"
+                variant="solo"
+                :loading="isLoading ?? false"
+                @change="entry('metal_central_element', metal_central_element)"
+                v-model:model-value="metal_central_element"
+                ></v-text-field>
+            </v-col>
+            <v-col
+            cols="12"
+            md = "2"
+            >
+                <v-text-field
+                label="Charge"
+                prepend-icon="mdi-gold"
+                variant="solo"
+                :loading="isLoading ?? false"
+                @change="entry('metal_charge', metal_charge)"
+                v-model:model-value="metal_charge"
+                ></v-text-field>
+            </v-col>
+            <v-col
+            cols="12"
+            md = "6"
+            >
+                <v-text-field
+                label="Formula String"
+                prepend-icon="mdi-gold"
+                variant="solo"
+                :loading="isLoading ?? false"
+                @change="entry('metal_formula_string', metal_formula_string)"
+                v-model:model-value="metal_formula_string"
+                ></v-text-field>
+            </v-col>
         </v-row>
 </template>
 
@@ -31,29 +70,19 @@ export default defineComponent ({
             type: String,
             default: ''
         }
-        // metal_central_element: {
-        //     type: String,
-        //     default: ''
-        // },
-        // metal_formula_string: {
-        //     type: String,
-        //     default: ''
-        // },
-        // metal_charge: {
-        //     type: String,
-        //     default: false
-        // }
     },
     data: () => ({
-        metal_id: ''
-        // metal_central_element_val: '',
-        // metal_formula_string_val: '',
-        // metal_charge_val: ''
+        metal_id: '',
+        metal_central_element: '',
+        metal_formula_string: '',
+        metal_charge: ''
     }),
     methods: {
-        // todo: make these a single method: how?
-        onMetalIdUpdate(){
-            this.$emit('update:metal_id', this.metal_id)
+        // Data must be sent as {string, data} because the other end uses javascript tomshittery to 
+        // interpret fieldToChange as a variable name. I have no idea why this works and I hate
+        // it but whatever, it works.
+        entry(fieldToChange: String, dataToSend: any) { // listener is in /views/NewEntry.vue
+            this.$emit('entry', {'fieldToChange': fieldToChange, 'dataToSend': dataToSend})
         }
     }
 })
