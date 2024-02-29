@@ -49,6 +49,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { SupabaseClient } from '@supabase/supabase-js';
+import { userAuthStore } from '@/stores/userAuthStore';
 
 export default defineComponent({
   name: "NewEntryForm",
@@ -87,7 +88,10 @@ export default defineComponent({
           email: this.emailValue,
           password: this.passwordValue,
         });
-        if (error) throw error;
+        if (error === null) {
+          const authStore = userAuthStore(); // Access the store
+          authStore.login(); // Update the isLoggedIn state
+        }
         this.$router.push('/');
       } catch (error) {
           console.log('Error: ', error)

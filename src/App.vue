@@ -30,19 +30,9 @@
           <v-icon :icon="themeModeSwitchIcon"/>
         </v-btn>
 
-        <v-btn v-if="isLoggedIn" @click="logOut">
-          Log Out
-        </v-btn>
-
-        <div v-else>
-        <v-btn @click="login">
-          Log In
-        </v-btn>
-
-        <v-btn @click="register">
-          Register
-        </v-btn>
-        </div>
+      <v-btn v-if="!authStore.isLoggedIn" @click="login">Log In</v-btn>
+      <v-btn v-if="!authStore.isLoggedIn" @click="register">Register</v-btn>
+      <v-btn v-if="authStore.isLoggedIn" @click="logOut">Log Out</v-btn>
 
       </v-app-bar>
 
@@ -115,6 +105,7 @@
 import { defineComponent } from 'vue'
 import { useTheme } from 'vuetify'
 import { SupabaseClient } from '@supabase/supabase-js'
+import { userAuthStore } from './stores/userAuthStore'
 
 export default defineComponent({
   components: {
@@ -124,10 +115,12 @@ export default defineComponent({
     const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
 
     const isLoggedIn = window.localStorage.getItem("sb-eauyarvlibdxezijtoyx-auth-token") !== null
+    const authStore = userAuthStore();
 
     theme.global.name.value = isDark ? 'dark' : 'light'
 
     return {
+      authStore,
       isLoggedIn,
       theme,
       toggleTheme: () => {
@@ -171,7 +164,8 @@ export default defineComponent({
 
     logOut() {
       const supabase = new SupabaseClient('https://eauyarvlibdxezijtoyx.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVhdXlhcnZsaWJkeGV6aWp0b3l4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDE0NjQ3NDcsImV4cCI6MjAxNzA0MDc0N30.3u320_sLG2xIyXRRVs4_TyO44w9kc0TJnhaLja5JyAA')
-      supabase.auth.signOut()
+      supabase.auth.signOut();
+      this.authStore.logout();
     },
 
     register(){
