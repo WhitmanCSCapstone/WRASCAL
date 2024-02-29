@@ -32,6 +32,8 @@
 
       <v-btn v-if="!authStore.isLoggedIn" @click="login">Log In</v-btn>
       <v-btn v-if="!authStore.isLoggedIn" @click="register">Register</v-btn>
+
+      <v-btn v-if="authStore.isLoggedIn" @click="newEntry">New Entry</v-btn>
       <v-btn v-if="authStore.isLoggedIn" @click="logOut">Log Out</v-btn>
 
       </v-app-bar>
@@ -140,12 +142,6 @@ export default defineComponent({
         to: '/about-us',
         icon: 'mdi-information'
       },
-      {
-        name: 'Enter',
-
-        to: '/new-entry',
-        icon: 'mdi-plus'
-      }
     ],
     drawer: false,
     loginDialogVisible: false
@@ -166,10 +162,18 @@ export default defineComponent({
       const supabase = new SupabaseClient('https://eauyarvlibdxezijtoyx.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVhdXlhcnZsaWJkeGV6aWp0b3l4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDE0NjQ3NDcsImV4cCI6MjAxNzA0MDc0N30.3u320_sLG2xIyXRRVs4_TyO44w9kc0TJnhaLja5JyAA')
       supabase.auth.signOut();
       this.authStore.logout();
+
+      if(this.$route.path === '/new-entry'){
+        this.$router.push('/')
+      }
     },
 
     register(){
       this.$router.push('/register')
+    },
+
+    newEntry(){
+      this.$router.push('/new-entry')
     },
 
     changeDrawerStatus(){
