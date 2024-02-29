@@ -2,6 +2,9 @@
   <v-container class="pt-8">
     <h1> Log In</h1><br>
     <form @submit.prevent="submitForm">
+      <v-alert type="error" v-if="showAlert" class="mt-2">
+      {{ loginError }}
+    </v-alert>
     <v-row class="pt-8">
       <v-col
         cols="12"
@@ -79,7 +82,9 @@ export default defineComponent({
   data: () => ({
     emailValue: '',
     passwordValue: '',
-    ligandChargeValue: ''
+    ligandChargeValue: '',
+    loginError: '',
+    showAlert: false
   }),
   methods: {
     async submitForm() {
@@ -92,8 +97,11 @@ export default defineComponent({
         if (error === null) {
           const authStore = userAuthStore(); // Access the store
           authStore.login(); // Update the isLoggedIn state
+          this.$router.push('/');
+        } else {
+          this.loginError = error.message;
+          this.showAlert = true;
         }
-        this.$router.push('/');
       } catch (error) {
           console.log('Error: ', error)
       }
