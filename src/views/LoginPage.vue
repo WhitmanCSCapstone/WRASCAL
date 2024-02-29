@@ -88,6 +88,7 @@ export default defineComponent({
           password: this.passwordValue,
         });
         if (error) throw error;
+        this.$router.push('/');
       } catch (error) {
           console.log('Error: ', error)
       }
