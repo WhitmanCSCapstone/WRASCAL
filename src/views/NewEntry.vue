@@ -4,8 +4,16 @@ import Dropdown from 'primevue/dropdown';
   <v-container class="pt-8">
     <h1> New Ligand Submission </h1><br>
 
-    <h2> Metal Information </h2>
-    <v-row class="pt-8">
+    <h2> Metal Information</h2>
+    
+    <!-- <v-radio-group v-model="metal_radio">
+      <v-radio label="Enter a new metal" value="new"/>
+      <v-radio label="Select an existing metal" value="existing"/>
+    </v-radio-group> -->
+
+    <MetalInfo v-if="metal_radio == 'new'" :isLoading="isLoading" v-model:metal_id="this.metal_id"/>
+
+    <!-- <v-row class="pt-8">
       <v-col
         cols="12"
         md="2"
@@ -54,7 +62,10 @@ import Dropdown from 'primevue/dropdown';
         v-model:model-value="metal_formula_string"
         ></v-text-field>
       </v-col>
-    </v-row>
+    </v-row> -->
+    <ConditionsInfo :isLoading="isLoading" @entry="updateField"/>
+
+    <v-btn id="testButton" @click="testMethod">TEST BUTTON</v-btn>
 
     <v-btn id="sumbitbutton" type="submit" block class="mt-2" color="primary" @click="submitForm">Submit</v-btn>
   </v-container>
@@ -62,37 +73,23 @@ import Dropdown from 'primevue/dropdown';
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import MetalInfo from "../components/DataEntry/MetalInfo.vue"
+import ConditionsInfo from "../components/DataEntry/ConditionsInfo.vue"
 
-// interface dataEntry {
-//   metal_id: number,
-//   metal_central_element: string,
-//   metal_formula_string: string,
-//   metal_charge: number,
-//   ligand_id: number,
-//   ligand_name: string,
-//   ligand_mol_formula: string,
-//   ligand_charge: string,
-//   ligand_form: string,
-//   categories: string,
-//   eq_id: number,
-//   eq_expression_string: string,
-//   eq_products: string,
-//   eq_reactants: string,
-//   eq_value: number,
-//   eq_significant_figures: number,
-//   conditions_id: number,
-//   conditions_temperature: number,
-//   conditions_ionic_strength: number
-// }
 
-interface writeRequestExample {
-  metal_id: number;
-  metal_central_element: String;
+interface writeRequest {
+  metal_central_element: string;
   metal_formula_string: string;
   metal_charge: number;
+  conditions_constant_kind: string;
+  conditions_temperature: number;
+  conditions_temperature_varies: boolean;
+  conditions_ionic_strength: number;
 }
 
-async function postJSON(data: writeRequestExample) {
+// POSTs the data to backend API endpoint. Reciever is currently in wrascal-ts-2024
+// repository, under src/controllers/rest/api/WriteController.ts
+async function postJSON(data: writeRequest) {
   try {
     const response = await fetch("http://0.0.0.0:8083/rest/write/db", {
       method: "POST",
@@ -101,7 +98,6 @@ async function postJSON(data: writeRequestExample) {
       },
       body: JSON.stringify(data),
     });
-
     const result = await response.json();
     console.log("Success:", result);
   } catch (error) {
@@ -109,6 +105,7 @@ async function postJSON(data: writeRequestExample) {
   }
 }
 
+// Defines the HTML so that it can be used as a component in the vue frame on the site
 export default defineComponent({
   name: "NewEntryForm",
   props: {
@@ -117,120 +114,46 @@ export default defineComponent({
       default: false
     },
   },
-  //   metalName: {
-  //     type: String,
-  //     default: ''
-  //   },
-  //   metalCharge: {
-  //     type: String,
-  //     default: ''
-  //   },
-  //   ligandName: {
-  //     type: String,
-  //     default:''
-  //   },
-  //   ligandFormula: {
-  //     type: String,
-  //     default: ''
-  //   },
-  //   fileName: {
-  //     type: String,
-  //     default: ''
-  //   },
-  //   protonationLevel: {
-  //     type: String,
-  //     default: ''
-  //   },
-  //   constantType: {
-  //     type: String,
-  //     default: ''
-  //   },
-  //   equilibriumExpression: {
-  //     type: String,
-  //     default: ''
-  //   },
-  //   temperature: {
-  //     type: String,
-  //     default: ''
-  //   },
-  //   ionicStrength: {
-  //     type: String,
-  //     default: ''
-  //   },
-  //   footnote: {
-  //     type: String,
-  //     default: ''
-  //   },
-  //   value: {
-  //     type: String,
-  //     default: ''
-  //   },
-  //   entryCode: {
-  //     type: String,
-  //     default: ''
-  //   },
-  //   DOI: {
-  //     type: String,
-  //     default: ''
-  //   }
-  // },
+  components:{ MetalInfo , ConditionsInfo},
   data: () => ({
-    metal_id: '',
+    // ALL DATA IS PREFIXED_ with the component it came from!
+
+    // metal information
     metal_central_element: '',
     metal_formula_string: '',
-    metal_charge: ''
-    // ligand_id: 0,
-    // ligand_name: '',
-    // ligand_mol_formula: '',
-    // ligand_charge: '',
-    // ligand_form: '',
-    // categories: '',
-    // eq_id: 0,
-    // eq_expression_string: '',
-    // eq_products: '',
-    // eq_reactants: '',
-    // eq_value: 0,
-    // eq_significant_figures: 0,
-    // conditions_id: 0,
-    // conditions_temperature: 0,
-    // conditions_ionic_strength: 0
+    metal_charge: '',
+
+    // conditions information
+    conditions_radio: '',
+    conditions_constant_kind: '',
+    conditions_temperature: '',
+    conditions_temperature_varies: false,
+    conditions_ionic_strength: '',
   }),
   methods: {
     submitForm() {
-
-      // this.$emit('update:isLoading', true)
-    
-      // const allVars: dataEntry = {
-      //   id: 999,
-      //   metalName: this.metalNameValue,
-      //   metalCharge: this.metalChargeValue,
-      //   ligandName: this.ligandNameValue,
-      //   ligandFormula: this.ligandFormulaValue,
-      //   ligandFile: this.ligandFileValue,
-      //   protonationLevel: this.protonationLevelValue,
-      //   constantType: this.constantTypeValue,
-      //   equilibriumExpression: this.equilibriumExpressionValue,
-      //   temperature: this.temperatureValue,
-      //   ionicStrength: this.ionicStrengthValue,
-      //   footnote: this.footnoteValue,
-      //   value: this.valueValue,
-      //   referenceEntryCode: this.entryCodeValue,
-      //   referenceDOIValue: this.DOIValue
-      // };
-      const exampleData: writeRequestExample = {
-        metal_id: parseInt(this.metal_id),
+      // turn the data into a writeRequest object
+      const writeData: writeRequest = {
         metal_central_element: this.metal_central_element,
         metal_formula_string: this.metal_formula_string,
-        metal_charge: parseInt(this.metal_charge)
-        // metal_central_element = this.metal_central_element,
-        // metal_formula_string = this.metal_formula_string,
-        // metal_charge = this.metal_charge
+        metal_charge: parseInt(this.metal_charge),
+        conditions_constant_kind: this.conditions_constant_kind,
+        conditions_temperature: parseInt(this.conditions_temperature),
+        conditions_temperature_varies: this.conditions_temperature_varies,
+        conditions_ionic_strength: parseInt(this.conditions_ionic_strength)
       }
 
-      //postJSON(data);
       console.log("Sending Request")
-      console.log(JSON.stringify(exampleData))
-      postJSON(exampleData);
+      console.log(JSON.stringify(writeData))
+      postJSON(writeData);
+    },
+    updateField(input: {fieldToChange: String, dataToSend: any}) {
+      // doing this should make alan turing revive and call a hit on you
+      this.$data[input.fieldToChange] = input.dataToSend
+    },
+    testMethod() {
+      console.log("button pushed")
+      this.conditions_constant_kind = 'yarr'
     }
   }
 })
