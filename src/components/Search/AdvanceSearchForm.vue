@@ -6,7 +6,7 @@
       type="info"
       closable
       close-label="Close Alert"
-      title="Advance Search Tips"
+      title="Advanced Search Tips"
       class="text-left"
     >
       All the fields below support multiple entries, you can input one or more entries split by: <b>,</b>

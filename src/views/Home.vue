@@ -80,7 +80,7 @@ export default defineComponent({
       return theme.global.current.value.dark ? 'filter: invert(0%);' : 'filter: invert(100%);'
     },
     searchOptionSwitchButtonContent(): string{
-      return this.isSimpleSearch ? 'Advance Search' : 'Simple Search'
+      return this.isSimpleSearch ? 'Advanced Search' : 'Simple Search'
     }
   },
   methods: {
