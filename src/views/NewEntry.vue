@@ -21,7 +21,6 @@ import Dropdown from 'primevue/dropdown';
 import { defineComponent } from 'vue'
 import MetalInfo from "../components/DataEntry/MetalInfo.vue"
 import ConditionsInfo from "../components/DataEntry/ConditionsInfo.vue"
-import ChemicalEntry from "./ChemicalEntry.vue"
 
 interface metalData {
   central_element: string;
