@@ -68,7 +68,7 @@ export default defineComponent({
       default: false
     },
   },
-  components:{ MetalInfo , ConditionsInfo, ChemicalEntry},
+  components:{ MetalInfo , ConditionsInfo},
   data: () => ({
     // all data is prefixed_ with the component it came from!
 
