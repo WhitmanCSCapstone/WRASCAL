@@ -229,7 +229,8 @@ interface dataEntry {
   footnote: String,
   value: String,
   referenceEntryCode: String,
-  referenceDOIValue: String
+  referenceDOIValue: String,
+  user_id: String
 }
 
 interface metalEntry {
@@ -324,6 +325,10 @@ export default defineComponent({
     DOI: {
       type: String,
       default: ''
+    },
+    user_id: {
+      type: String,
+      default: ''
     }
   },
   data: () => ({
@@ -340,7 +345,7 @@ export default defineComponent({
     footnoteValue: '',
     valueValue: '',
     entryCodeValue: '',
-    DOIValue: ''
+    DOIValue: '',
   }),
   methods: {
     onMetalNameUpdate() {
@@ -403,7 +408,8 @@ export default defineComponent({
         footnote: this.footnoteValue,
         value: this.valueValue,
         referenceEntryCode: this.entryCodeValue,
-        referenceDOIValue: this.DOIValue
+        referenceDOIValue: this.DOIValue,
+        user_id: getUserID()
       };
 
       const metalData: metalEntry = {
