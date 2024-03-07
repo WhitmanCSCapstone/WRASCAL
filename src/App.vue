@@ -30,13 +30,11 @@
           <v-icon :icon="themeModeSwitchIcon"/>
         </v-btn>
 
-        <v-btn @click="login">
-          Log In
-        </v-btn>
+      <v-btn v-if="!authStore.isLoggedIn" @click="login">Log In</v-btn>
+      <v-btn v-if="!authStore.isLoggedIn" @click="register">Register</v-btn>
 
-        <v-btn @click="register">
-          Register
-        </v-btn>
+      <v-btn v-if="authStore.isLoggedIn" @click="newEntry">New Entry</v-btn>
+      <v-btn v-if="authStore.isLoggedIn" @click="logOut">Log Out</v-btn>
 
       </v-app-bar>
 
@@ -108,19 +106,24 @@
 
 import { defineComponent } from 'vue'
 import { useTheme } from 'vuetify'
-import Login from './views/Login.vue'
+import { SupabaseClient } from '@supabase/supabase-js'
+import { userAuthStore } from './stores/userAuthStore'
 
 export default defineComponent({
   components: {
-    Login
   },
   setup () {
     const theme = useTheme()
     const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
 
+    const isLoggedIn = window.localStorage.getItem("sb-eauyarvlibdxezijtoyx-auth-token") !== null
+    const authStore = userAuthStore();
+
     theme.global.name.value = isDark ? 'dark' : 'light'
 
     return {
+      authStore,
+      isLoggedIn,
       theme,
       toggleTheme: () => {
         theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
@@ -139,12 +142,6 @@ export default defineComponent({
         to: '/about-us',
         icon: 'mdi-information'
       },
-      {
-        name: 'Enter',
-
-        to: '/new-entry',
-        icon: 'mdi-plus'
-      }
     ],
     drawer: false,
     loginDialogVisible: false
@@ -158,11 +155,25 @@ export default defineComponent({
   },
   methods: {
     login() {
-      this.loginDialogVisible = true;
+      this.$router.push('/login')
+    },
+
+    logOut() {
+      const supabase = new SupabaseClient('https://eauyarvlibdxezijtoyx.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVhdXlhcnZsaWJkeGV6aWp0b3l4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDE0NjQ3NDcsImV4cCI6MjAxNzA0MDc0N30.3u320_sLG2xIyXRRVs4_TyO44w9kc0TJnhaLja5JyAA')
+      supabase.auth.signOut();
+      this.authStore.logout();
+
+      if(this.$route.path === '/new-entry'){
+        this.$router.push('/')
+      }
     },
 
     register(){
       this.$router.push('/register')
+    },
+
+    newEntry(){
+      this.$router.push('/new-entry')
     },
 
     changeDrawerStatus(){

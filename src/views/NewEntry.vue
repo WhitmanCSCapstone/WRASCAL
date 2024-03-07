@@ -2,6 +2,7 @@ import Dropdown from 'primevue/dropdown';
 
 <template>
   <v-container class="pt-8">
+
     <h1> New Entry Submission </h1><br>
     
     <v-radio-group v-model="metal_radio">
@@ -44,6 +45,7 @@ interface writeRequest {
 // POSTs the data to backend API endpoint. Reciever is currently in wrascal-ts-2024
 // repository, under src/controllers/rest/api/WriteController.ts
 async function postJSON(data: writeRequest) {
+
   try {
     const response = await fetch("http://0.0.0.0:8083/rest/write/db", { // change before deoloy
       method: "POST",
@@ -60,6 +62,13 @@ async function postJSON(data: writeRequest) {
 }
 
 // Defines the HTML so that it can be used as a component in the vue frame on the site
+function getUserID() {
+  const user = window.localStorage.getItem("sb-eauyarvlibdxezijtoyx-auth-token") || '';
+  const accessTokenResponse: AccessTokenResponse = JSON.parse(user);
+
+  return accessTokenResponse.user.id;
+}
+
 export default defineComponent({
   name: "NewEntryForm",
   props: {
@@ -96,13 +105,13 @@ export default defineComponent({
         charge: parseInt(this.metal_charge)
       }
 
+
       const conditionsInput: conditionsData = {
         constant_kind: this.conditions_constant_kind,
         temperature: parseInt(this.conditions_temperature),
         temperature_varies: this.conditions_temperature_varies,
         ionic_strength: parseInt(this.conditions_ionic_strength)
       }
-
       // turn the data into a writeRequest object
       const writeData: writeRequest = {
         metalInfo: metalInput,
