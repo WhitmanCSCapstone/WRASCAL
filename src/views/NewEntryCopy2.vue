@@ -3,14 +3,31 @@ import Dropdown from 'primevue/dropdown';
 <template>
   <v-container class="pt-8">
     <h1> New Ligand Submission </h1><br>
+
     <h2> Metal Information </h2>
+    <v-row class="pt-8">
+      <v-col
+        cols="12"
+        md="3"
+      >
+      <v-text-field
+        label="Metal ID"
+        prepend-icon="mdi-gold"
+        variant="solo"
+        :loading="isLoading ?? false"
+        v-model:model-value="metal_id"
+        ></v-text-field>
+      </v-col>
+    </v-row>
+
+    <!-- <h2> Metal Information </h2>
     <v-row class="pt-8">
       <v-col
         cols="12"
         md="6"
       >
         <v-text-field
-          label="Metal"
+          label="Metal ID"
           prepend-icon="mdi-gold"
           variant="solo"
           :loading="isLoading ?? false"
@@ -31,7 +48,7 @@ import Dropdown from 'primevue/dropdown';
           v-model:model-value="metalChargeValue"
         ></v-text-field>
       </v-col>
-      <!----<v-col
+      <v-col
         cols="12"
         md="6"
       >
@@ -39,7 +56,7 @@ import Dropdown from 'primevue/dropdown';
         label="Metal Select"
       ></v-combobox>
     
-      </v-col> -->
+      </v-col>
     </v-row>
 
     <h2> Ligand Information</h2>
@@ -62,7 +79,7 @@ import Dropdown from 'primevue/dropdown';
         cols="12"
         md="4"
       >
-        <!-- TODO: FIGURE OUT HOW TO ENTER CHEMICAL DATA!!!-->
+        <!TODO: FIGURE OUT HOW TO ENTER CHEMICAL DATA!!!
         <v-text-field
           label="Formula"
           prepend-icon="mdi-flask"
@@ -205,7 +222,7 @@ import Dropdown from 'primevue/dropdown';
         ></v-text-field>
   
       </v-col>
-    </v-row>
+    </v-row> -->
 
     <v-btn id="sumbitbutton" type="submit" block class="mt-2" color="primary" @click="submitForm">Submit</v-btn>
   </v-container>
@@ -215,51 +232,37 @@ import Dropdown from 'primevue/dropdown';
 import { defineComponent } from 'vue'
 
 interface dataEntry {
-  metalName: String,
-  metalCharge: String,
-  ligandName: String,
-  ligandFormua: String,
-  ligandFile: String,
-  protonationLevel: String,
-  constantType: String,
-  equilibriumExpression: String,
-  temperature: String,
-  ionicStrength: String,
-  footnote: String,
-  value: String,
-  referenceEntryCode: String,
-  referenceDOIValue: String
+  metal_id: number,
+  metal_central_element: string,
+  metal_formula_string: string,
+  metal_charge: number,
+  ligand_id: number,
+  ligand_name: string,
+  ligand_mol_formula: string,
+  ligand_charge: string,
+  ligand_form: string,
+  categories: string,
+  eq_id: number,
+  eq_expression_string: string,
+  eq_products: string,
+  eq_reactants: string,
+  eq_value: number,
+  eq_significant_figures: number,
+  conditions_id: number,
+  conditions_temperature: number,
+  conditions_ionic_strength: number
 }
 
-interface metalEntry {
-  id: Number,
-  central_element: String,
-  formula_string: String,
-  charge: Number
+interface writeRequestExample {
+  metal_id: number;
+  metal_central_element: String;
+  metal_formula_string: string;
+  metal_charge: number;
 }
 
-interface conditionEntry {
-  id: Number,
-  temperature: String,
-  ionic_strength: String
-}
-
-interface ligandsEntry {
-  id: Number,
-  LigandName: String
-  LigandFormula: String,
-  LigandProtonation: String
-}
-
-interface DataEntryPlus {
-  metal: metalEntry,
-  conditions: conditionEntry,
-  ligands: ligandsEntry
-}
-
-async function postJSON(data: DataEntryPlus) {
+async function postJSON(data: writeRequestExample) {
   try {
-    const response = await fetch("http://localhost:3003/insertData", {
+    const response = await fetch("http://0.0.0.0:8083/rest/write/db", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -281,175 +284,158 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
-    metalName: {
-      type: String,
-      default: ''
-    },
-    metalCharge: {
-      type: String,
-      default: ''
-    },
-    ligandName: {
-      type: String,
-      default:''
-    },
-    ligandFormula: {
-      type: String,
-      default: ''
-    },
-    fileName: {
-      type: String,
-      default: ''
-    },
-    protonationLevel: {
-      type: String,
-      default: ''
-    },
-    constantType: {
-      type: String,
-      default: ''
-    },
-    equilibriumExpression: {
-      type: String,
-      default: ''
-    },
-    temperature: {
-      type: String,
-      default: ''
-    },
-    ionicStrength: {
-      type: String,
-      default: ''
-    },
-    footnote: {
-      type: String,
-      default: ''
-    },
-    value: {
-      type: String,
-      default: ''
-    },
-    entryCode: {
-      type: String,
-      default: ''
-    },
-    DOI: {
-      type: String,
-      default: ''
-    }
   },
+  //   metalName: {
+  //     type: String,
+  //     default: ''
+  //   },
+  //   metalCharge: {
+  //     type: String,
+  //     default: ''
+  //   },
+  //   ligandName: {
+  //     type: String,
+  //     default:''
+  //   },
+  //   ligandFormula: {
+  //     type: String,
+  //     default: ''
+  //   },
+  //   fileName: {
+  //     type: String,
+  //     default: ''
+  //   },
+  //   protonationLevel: {
+  //     type: String,
+  //     default: ''
+  //   },
+  //   constantType: {
+  //     type: String,
+  //     default: ''
+  //   },
+  //   equilibriumExpression: {
+  //     type: String,
+  //     default: ''
+  //   },
+  //   temperature: {
+  //     type: String,
+  //     default: ''
+  //   },
+  //   ionicStrength: {
+  //     type: String,
+  //     default: ''
+  //   },
+  //   footnote: {
+  //     type: String,
+  //     default: ''
+  //   },
+  //   value: {
+  //     type: String,
+  //     default: ''
+  //   },
+  //   entryCode: {
+  //     type: String,
+  //     default: ''
+  //   },
+  //   DOI: {
+  //     type: String,
+  //     default: ''
+  //   }
+  // },
   data: () => ({
-    metalNameValue: '',
-    metalChargeValue: '',
-    ligandNameValue: '',
-    ligandFormulaValue: '',
-    ligandFileValue: '',
-    protonationLevelValue: '',
-    constantTypeValue: '',
-    equilibriumExpressionValue: '',
-    temperatureValue: '',
-    ionicStrengthValue: '',
-    footnoteValue: '',
-    valueValue: '',
-    entryCodeValue: '',
-    DOIValue: ''
+    metal_id: 0,
+    metal_central_element: '',
+    metal_formula_string: '',
+    metal_charge: 0,
+    ligand_id: 0,
+    ligand_name: '',
+    ligand_mol_formula: '',
+    ligand_charge: '',
+    ligand_form: '',
+    categories: '',
+    eq_id: 0,
+    eq_expression_string: '',
+    eq_products: '',
+    eq_reactants: '',
+    eq_value: 0,
+    eq_significant_figures: 0,
+    conditions_id: 0,
+    conditions_temperature: 0,
+    conditions_ionic_strength: 0
   }),
   methods: {
-    onMetalNameUpdate() {
-      this.$emit('update:metalName', this.metalNameValue);
-    },
-    onMetalChargeUpdate() {
-      this.$emit('update:metalCharge', this.metalChargeValue);
-    },
-    onLigandNameUpdate(){
-      this.$emit('update:ligandName', this.ligandNameValue);
-    },
-    onLigandFormulaUpdate() {
-      this.$emit('update:ligandFormula', this.ligandFormulaValue);
-    },
-    onLigandFileUpdate() {
-      this.$emit('update:fileName', this.ligandFileValue);
-    },
-    onProtonationLevelUpdate() {
-      this.$emit('update:protonationLevel', this.protonationLevelValue);
-    },
-    onConstantTypeUpdate() {
-      this.$emit('update:constantType', this.constantTypeValue);
-    },
-    onEquilibriumExpressionUpdate() {
-      this.$emit('update:equilibriumExpression', this.equilibriumExpressionValue);
-    },
-    onTemperatureUpdate() {
-      this.$emit('udpate:temperature', this.temperatureValue);
-    },
-    onIonicStrengthUpdate() {
-      this.$emit('update:ionicStrenth', this.ionicStrengthValue);
-    },
-    onFootnoteUpdate() {
-      this.$emit('update:footnote', this.footnoteValue);
-    },
-    onValueUpdate() {
-      this.$emit('update:value', this.valueValue);
-    },
-    onEntryCodeUpdate() {
-      this.$emit('update:entryCode', this.entryCodeValue);
-    },
-    onDOIupdate() {
-      this.$emit('update:DOI', this.DOIValue);
-    },
+    // onMetalNameUpdate() {
+    //   this.$emit('update:metalName', this.metalNameValue);
+    // },
+    // onMetalChargeUpdate() {
+    //   this.$emit('update:metalCharge', this.metalChargeValue);
+    // },
+    // onLigandNameUpdate(){
+    //   this.$emit('update:ligandName', this.ligandNameValue);
+    // },
+    // onLigandFormulaUpdate() {
+    //   this.$emit('update:ligandFormula', this.ligandFormulaValue);
+    // },
+    // onLigandFileUpdate() {
+    //   this.$emit('update:fileName', this.ligandFileValue);
+    // },
+    // onProtonationLevelUpdate() {
+    //   this.$emit('update:protonationLevel', this.protonationLevelValue);
+    // },
+    // onConstantTypeUpdate() {
+    //   this.$emit('update:constantType', this.constantTypeValue);
+    // },
+    // onEquilibriumExpressionUpdate() {
+    //   this.$emit('update:equilibriumExpression', this.equilibriumExpressionValue);
+    // },
+    // onTemperatureUpdate() {
+    //   this.$emit('udpate:temperature', this.temperatureValue);
+    // },
+    // onIonicStrengthUpdate() {
+    //   this.$emit('update:ionicStrenth', this.ionicStrengthValue);
+    // },
+    // onFootnoteUpdate() {
+    //   this.$emit('update:footnote', this.footnoteValue);
+    // },
+    // onValueUpdate() {
+    //   this.$emit('update:value', this.valueValue);
+    // },
+    // onEntryCodeUpdate() {
+    //   this.$emit('update:entryCode', this.entryCodeValue);
+    // },
+    // onDOIupdate() {
+    //   this.$emit('update:DOI', this.DOIValue);
+    // },
     submitForm() {
 
       // this.$emit('update:isLoading', true)
     
-      const allVars: dataEntry = {
-        metalName: this.metalNameValue,
-        metalCharge: this.metalChargeValue,
-        ligandName: this.ligandNameValue,
-        ligandFormua: this.ligandFormulaValue,
-        ligandFile: this.ligandFileValue,
-        protonationLevel: this.protonationLevelValue,
-        constantType: this.constantTypeValue,
-        equilibriumExpression: this.equilibriumExpressionValue,
-        temperature: this.temperatureValue,
-        ionicStrength: this.ionicStrengthValue,
-        footnote: this.footnoteValue,
-        value: this.valueValue,
-        referenceEntryCode: this.entryCodeValue,
-        referenceDOIValue: this.DOIValue
-      };
-
-
-      const metalData: metalEntry = {
-        id: 999,
-        central_element: this.metalNameValue,
-        formula_string: this.ligandFormulaValue,
-        charge: 999
+      // const allVars: dataEntry = {
+      //   id: 999,
+      //   metalName: this.metalNameValue,
+      //   metalCharge: this.metalChargeValue,
+      //   ligandName: this.ligandNameValue,
+      //   ligandFormula: this.ligandFormulaValue,
+      //   ligandFile: this.ligandFileValue,
+      //   protonationLevel: this.protonationLevelValue,
+      //   constantType: this.constantTypeValue,
+      //   equilibriumExpression: this.equilibriumExpressionValue,
+      //   temperature: this.temperatureValue,
+      //   ionicStrength: this.ionicStrengthValue,
+      //   footnote: this.footnoteValue,
+      //   value: this.valueValue,
+      //   referenceEntryCode: this.entryCodeValue,
+      //   referenceDOIValue: this.DOIValue
+      // };
+      const exampleData: writeRequestExample = {
+        metal_id = this.metal_id,
+        metal_central_element = this.metal_central_element,
+        metal_formula_string = this.metal_formula_string,
+        metal_charge = this.metal_charge
       }
-
-      const conditionsData: conditionEntry = {
-        id: 999,
-        temperature: this.temperatureValue,
-        ionic_strength: this.ionicStrengthValue
-      }
-
-      const ligandsData: ligandsEntry = {
-        id: 999,
-        LigandName: this.ligandNameValue,
-        LigandFormula: this.ligandFormulaValue,
-        LigandProtonation: this.protonationLevelValue
-      }
-
-      const data: DataEntryPlus = {
-        metal: metalData,
-        conditions: conditionsData,
-        ligands: ligandsData
-      }
-
-      console.log("what if we kissed")
-      console.log("data: " + JSON.stringify(data))
 
       //postJSON(data);
-      postJSON(data);
+      postJSON(exampleData);
     }
   }
 })
