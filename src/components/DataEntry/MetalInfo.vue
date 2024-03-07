@@ -6,6 +6,7 @@
             md="2"
             >
                 <v-text-field
+                v-if="false"
                 label="Metal ID for fakers"
                 prepend-icon="mdi-gold"
                 variant="solo"

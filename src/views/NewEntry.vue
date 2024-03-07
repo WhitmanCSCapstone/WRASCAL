@@ -3,17 +3,15 @@ import Dropdown from 'primevue/dropdown';
 <template>
   <v-container class="pt-8">
     <h1> New Entry Submission </h1><br>
-
-
     
-    <!-- <v-radio-group v-model="metal_radio">
+    <v-radio-group v-model="metal_radio">
       <v-radio label="Enter a new metal" value="new"/>
       <v-radio label="Select an existing metal" value="existing"/>
-    </v-radio-group> -->
+    </v-radio-group>
 
-    <MetalInfo :isLoading="isLoading" v-model:metal_id="this.metal_id" @entry="updateField"/>
+    <MetalInfo v-if="metal_radio == 'new'" :isLoading="isLoading" v-model:metal_id="this.metal_id" @entry="updateField"/>
 
-    <ConditionsInfo :isLoading="isLoading" @entry="updateField"/>
+    <ConditionsInfo :isLoading="isLoading" @entry="updateField"/>    
 
     <v-btn id="sumbitbutton" type="submit" block class="mt-2" color="primary" @click="submitForm">Submit</v-btn>
   </v-container>
@@ -23,18 +21,19 @@ import Dropdown from 'primevue/dropdown';
 import { defineComponent } from 'vue'
 import MetalInfo from "../components/DataEntry/MetalInfo.vue"
 import ConditionsInfo from "../components/DataEntry/ConditionsInfo.vue"
+import ChemicalEntry from "./ChemicalEntry.vue"
 
 interface metalData {
-  metal_central_element: string;
-  metal_formula_string: string;
-  metal_charge: number;
+  central_element: string;
+  formula_string: string;
+  charge: number;
 }
 
 interface conditionsData {
-  conditions_constant_kind: string;
-  conditions_temperature: number;
-  conditions_temperature_varies: boolean;
-  conditions_ionic_strength: number;
+  constant_kind: string;
+  temperature: number;
+  temperature_varies: boolean;
+  ionic_strength: number;
 }
 
 // will become own file eventually
@@ -70,12 +69,12 @@ export default defineComponent({
       default: false
     },
   },
-  components:{ MetalInfo , ConditionsInfo},
+  components:{ MetalInfo , ConditionsInfo, ChemicalEntry},
   data: () => ({
     // all data is prefixed_ with the component it came from!
 
     // metal information
-    metal_radio: '',
+    metal_radio: 'existing',
     metal_id: '',
     metal_central_element: '',
     metal_formula_string: '',
@@ -93,16 +92,16 @@ export default defineComponent({
     submitForm() {
 
       const metalInput: metalData = {
-        metal_central_element: this.metal_central_element,
-        metal_formula_string: this.metal_formula_string,
-        metal_charge: parseInt(this.metal_charge)
+        central_element: this.metal_central_element,
+        formula_string: this.metal_formula_string,
+        charge: parseInt(this.metal_charge)
       }
 
       const conditionsInput: conditionsData = {
-        conditions_constant_kind: this.conditions_constant_kind,
-        conditions_temperature: parseInt(this.conditions_temperature),
-        conditions_temperature_varies: this.conditions_temperature_varies,
-        conditions_ionic_strength: parseInt(this.conditions_ionic_strength)
+        constant_kind: this.conditions_constant_kind,
+        temperature: parseInt(this.conditions_temperature),
+        temperature_varies: this.conditions_temperature_varies,
+        ionic_strength: parseInt(this.conditions_ionic_strength)
       }
 
       // turn the data into a writeRequest object
