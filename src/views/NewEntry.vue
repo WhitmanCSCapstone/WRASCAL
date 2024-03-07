@@ -38,7 +38,7 @@ import Dropdown from 'primevue/dropdown';
       <v-combobox
         label="Metal Select"
       ></v-combobox>
-    
+
       </v-col> -->
     </v-row>
 
@@ -203,7 +203,7 @@ import Dropdown from 'primevue/dropdown';
           @input="onDOIupdate"
           v-model:model-value="DOIValue"
         ></v-text-field>
-  
+
       </v-col>
     </v-row>
 
@@ -213,6 +213,7 @@ import Dropdown from 'primevue/dropdown';
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { AccessTokenResponse } from '@/models/UserData'
 
 interface dataEntry {
   metalName: String,
@@ -228,7 +229,8 @@ interface dataEntry {
   footnote: String,
   value: String,
   referenceEntryCode: String,
-  referenceDOIValue: String
+  referenceDOIValue: String,
+  user_id: String
 }
 
 interface metalEntry {
@@ -237,6 +239,7 @@ interface metalEntry {
 }
 
 async function postJSON(data: dataEntry) {
+  console.log(getUserID());
   try {
     const response = await fetch("localhost:3003/metals", {
       method: "POST",
@@ -251,6 +254,13 @@ async function postJSON(data: dataEntry) {
   } catch (error) {
     console.error("Error:", error);
   }
+}
+
+function getUserID() {
+  const user = window.localStorage.getItem("sb-eauyarvlibdxezijtoyx-auth-token") || '';
+  const accessTokenResponse: AccessTokenResponse = JSON.parse(user);
+
+  return accessTokenResponse.user.id;
 }
 
 export default defineComponent({
@@ -315,6 +325,10 @@ export default defineComponent({
     DOI: {
       type: String,
       default: ''
+    },
+    user_id: {
+      type: String,
+      default: ''
     }
   },
   data: () => ({
@@ -331,7 +345,7 @@ export default defineComponent({
     footnoteValue: '',
     valueValue: '',
     entryCodeValue: '',
-    DOIValue: ''
+    DOIValue: '',
   }),
   methods: {
     onMetalNameUpdate() {
@@ -379,7 +393,7 @@ export default defineComponent({
     submitForm() {
 
       // this.$emit('update:isLoading', true)
-    
+
       const data: dataEntry = {
         metalName: this.metalNameValue,
         metalCharge: this.metalChargeValue,
@@ -394,19 +408,19 @@ export default defineComponent({
         footnote: this.footnoteValue,
         value: this.valueValue,
         referenceEntryCode: this.entryCodeValue,
-        referenceDOIValue: this.DOIValue
+        referenceDOIValue: this.DOIValue,
+        user_id: getUserID()
       };
 
       const metalData: metalEntry = {
         metalName: this.metalNameValue,
         legacy_string: this.metalChargeValue
       }
-    
+
       console.log("what if we kissed")
       console.log("data: " + JSON.stringify(data))
 
       postJSON(data);
-      postJson
     }
   }
 })
