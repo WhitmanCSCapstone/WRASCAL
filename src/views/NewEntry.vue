@@ -14,14 +14,19 @@ import Dropdown from 'primevue/dropdown';
 
     <ConditionsInfo :isLoading="isLoading" @entry="updateField"/>    
 
+    <ConstantsInfo :isLoading="isLoading" @entry="updateField"/>
+
+    
+
     <v-btn id="sumbitbutton" type="submit" block class="mt-2" color="primary" @click="submitForm">Submit</v-btn>
   </v-container>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import MetalInfo from "../components/DataEntry/MetalInfo.vue"
-import ConditionsInfo from "../components/DataEntry/ConditionsInfo.vue"
+import { defineComponent } from 'vue';
+import MetalInfo from "../components/DataEntry/MetalInfo.vue";
+import ConditionsInfo from "../components/DataEntry/ConditionsInfo.vue";
+import ConstantsInfo from "../components/DataEntry/ConstantsInfo.vue";
 
 interface metalData {
   central_element: string;
@@ -77,7 +82,7 @@ export default defineComponent({
       default: false
     },
   },
-  components:{ MetalInfo , ConditionsInfo},
+  components:{ MetalInfo , ConditionsInfo, ConstantsInfo},
   data: () => ({
     // all data is prefixed_ with the component it came from!
 
