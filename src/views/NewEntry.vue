@@ -4,11 +4,6 @@ import Dropdown from 'primevue/dropdown';
   <v-container class="pt-8">
 
     <h1> New Entry Submission </h1><br>
-    
-    <v-radio-group v-model="metal_radio">
-      <v-radio label="Enter a new metal" value="new"/>
-      <v-radio label="Select an existing metal" value="existing"/>
-    </v-radio-group>
 
     <MetalInfo v-if="metal_radio == 'new'" :isLoading="isLoading" v-model:metal_id="this.metal_id" @entry="updateField"/>
 
@@ -27,25 +22,95 @@ import { defineComponent } from 'vue';
 import MetalInfo from "../components/DataEntry/MetalInfo.vue";
 import ConditionsInfo from "../components/DataEntry/ConditionsInfo.vue";
 import ConstantsInfo from "../components/DataEntry/ConstantsInfo.vue";
+import { networkInterfaces } from 'os';
 
-interface metalData {
-  central_element: string;
-  formula_string: string;
+interface MetalInfo {
+    central_element: string;
+    formula_string: string;
+    charge: number;
+};
+
+interface Atom {
+  element: Element;
+  count: number;
+}
+
+interface MolecularFormula {
+  atoms: Atom[]
+  charge: number
+}
+
+interface form {
+  protonation_level: number;
+  charge: number
+}
+
+interface LigandInfo {
+  name: string;
+  molecular_formula: MolecularFormula,
+  form: form;
   charge: number;
+  categories: string[]
 }
 
-interface conditionsData {
-  constant_kind: string;
-  temperature: number;
-  temperature_varies: boolean;
-  ionic_strength: number;
+interface ConditionsInfo {
+    constant_kind: string;
+    temperature: number;
+    temperature_varies: boolean;
+    ionic_strength: number;
+};
+
+interface ExpressionEntry {
+    species: string;
+    equivalents: number;
+};
+
+interface EquilibriumExpressionInfo {
+    expression_string: string;
+    products: ExpressionEntry[];
+    reactants: ExpressionEntry[];
+};
+
+interface ConstantsInfo{
+    value: number;
+    significant_figures: number;
+    user_id: string;
+};
+
+interface UncertaintiesInfo {
+    direction: string;
+    magnitude: number;
+};
+
+interface LiteratureInfo {
+    litref: string;
+    litcode: string;
+};
+
+interface Footnote {
+    type: string;
+    content: string;
+};
+
+interface note {
+  type: footnoteType;
+  content: string;
 }
 
-// will become own file eventually
+interface FootnotesInfo {
+    notes: note[];
+};
+
 interface writeRequest {
-  metalInfo: metalData;
-  conditionsInfo: conditionsData;
-}
+    metalInfo: MetalInfo;
+    ligandInfo: LigandInfo;
+    conditionsInfo: ConditionsInfo;
+    equilibriumExpressionInfo: EquilibriumExpressionInfo;
+    constantsInfo: ConstantsInfo;
+    uncertaintiesInfo: UncertaintiesInfo;
+    literaturesInfo: LiteratureInfo;
+    footnotesInfo: FootnotesInfo;
+};
 
 // POSTs the data to backend API endpoint. Reciever is currently in wrascal-ts-2024
 // repository, under src/controllers/rest/api/WriteController.ts
