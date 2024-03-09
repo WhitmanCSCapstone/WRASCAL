@@ -6,19 +6,6 @@
             md="2"
             >
                 <v-text-field
-                label="Metal ID for fakers"
-                prepend-icon="mdi-gold"
-                variant="solo"
-                :loading="isLoading ?? false"
-                @change="entry('metal_id', metal_id)"
-                v-model:model-value="metal_id"
-                ></v-text-field>
-            </v-col>
-            <v-col
-            cols="12"
-            md="2"
-            >
-                <v-text-field
                 label="Central Element"
                 prepend-icon="mdi-gold"
                 variant="solo"

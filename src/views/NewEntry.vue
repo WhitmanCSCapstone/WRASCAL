@@ -1,12 +1,7 @@
-import Dropdown from 'primevue/dropdown';
-
 <template>
   <v-container class="pt-8">
 
     <h1> New Entry Submission </h1><br>
-
-    <MetalInfo v-if="metal_radio == 'new'" :isLoading="isLoading" v-model:metal_id="this.metal_id" @entry="updateField"/>
-
     <ConditionsInfo :isLoading="isLoading" @entry="updateField"/>    
 
     <ConstantsInfo :isLoading="isLoading" @entry="updateField"/>
@@ -23,94 +18,25 @@ import MetalInfo from "../components/DataEntry/MetalInfo.vue";
 import ConditionsInfo from "../components/DataEntry/ConditionsInfo.vue";
 import ConstantsInfo from "../components/DataEntry/ConstantsInfo.vue";
 import { networkInterfaces } from 'os';
-
-interface MetalInfo {
-    central_element: string;
-    formula_string: string;
-    charge: number;
-};
-
-interface Atom {
-  element: Element;
-  count: number;
-}
-
-interface MolecularFormula {
-  atoms: Atom[]
-  charge: number
-}
-
-interface form {
-  protonation_level: number;
-  charge: number
-}
-
-interface LigandInfo {
-  name: string;
-  molecular_formula: MolecularFormula,
-  form: form;
-  charge: number;
-  categories: string[]
-}
-
-interface ConditionsInfo {
-    constant_kind: string;
-    temperature: number;
-    temperature_varies: boolean;
-    ionic_strength: number;
-};
-
-interface ExpressionEntry {
-    species: string;
-    equivalents: number;
-};
-
-interface EquilibriumExpressionInfo {
-    expression_string: string;
-    products: ExpressionEntry[];
-    reactants: ExpressionEntry[];
-};
-
-interface ConstantsInfo{
-    value: number;
-    significant_figures: number;
-    user_id: string;
-};
-
-interface UncertaintiesInfo {
-    direction: string;
-    magnitude: number;
-};
-
-interface LiteratureInfo {
-    litref: string;
-    litcode: string;
-};
-
-interface Footnote {
-    type: string;
-    content: string;
-};
-
-interface note {
-  type: footnoteType;
-  content: string;
-}
-
-interface FootnotesInfo {
-    notes: note[];
-};
-
-interface writeRequest {
-    metalInfo: MetalInfo;
-    ligandInfo: LigandInfo;
-    conditionsInfo: ConditionsInfo;
-    equilibriumExpressionInfo: EquilibriumExpressionInfo;
-    constantsInfo: ConstantsInfo;
-    uncertaintiesInfo: UncertaintiesInfo;
-    literaturesInfo: LiteratureInfo;
-    footnotesInfo: FootnotesInfo;
-};
+import { Element } from '@/models/enums/element';
+import { footnoteType } from '@/models/enums/footnoteType'
+import { MetalData, 
+          Atom, 
+          MolecularFormula, 
+          form, 
+          LigandData, 
+          ConditionsData,
+          ExpressionEntry,
+          EquilibriumExpressionData,
+          ConstantsData,
+          UncertaintiesData,
+          LiteratureData,
+          note,
+          FootnotesData,
+          writeRequest 
+        } from '../models/writeRequest'
+import LigandInfo from '@/components/DataEntry/LigandInfo.vue';
+import { NoteType } from '@/models/Note';
 
 // POSTs the data to backend API endpoint. Reciever is currently in wrascal-ts-2024
 // repository, under src/controllers/rest/api/WriteController.ts
@@ -152,40 +78,111 @@ export default defineComponent({
     // all data is prefixed_ with the component it came from!
 
     // metal information
-    metal_radio: 'existing',
-    metal_id: '',
     metal_central_element: '',
     metal_formula_string: '',
     metal_charge: '',
 
+    // ligand information
+    ligand_name: '',
+    ligand_molecular_formala: '',
+    ligand_form_protonation: '',
+    ligand_form_charge: '',
+    ligand_charge: '',
+    ligand_categories: '',
+
     // conditions information
-    conditions_radio: '',
-    conditions_id: '',
     conditions_constant_kind: '',
     conditions_temperature: '',
     conditions_temperature_varies: false,
     conditions_ionic_strength: '',
+
+    // equilibrium expression information
+    expression_string:'',
+    products:'',
+    reactants:'',
+
+    // constants info
+    constants_value:'',
+    constants_significant_figures:'',
+
+    // uncertainties info
+    direction:'',
+    magnitude:'',
+
+    // Literature info
+    litref:'',
+    litcode:'',
+
+    //footnote info
+    note_type:'',
+    note_content:''
   }),
   methods: {
     submitForm() {
 
-      const metalInput: metalData = {
+      const metalinfo: MetalData = {
         central_element: this.metal_central_element,
         formula_string: this.metal_formula_string,
         charge: parseInt(this.metal_charge)
       }
 
+      const ligandinfo: LigandData = {
+        name: this.ligand_name,
+        molecular_formula: this.parseMolecularFormula(this.ligand_molecular_formala),
+        form: {
+          protonation_level: parseInt(this.ligand_form_protonation),
+          charge: parseInt(this.ligand_form_charge)
+        } as form,
+        charge: parseInt(this.ligand_charge),
+        categories: this.ligand_categories.split(",")
+      }
 
-      const conditionsInput: conditionsData = {
+      const conditionsinfo: ConditionsData = {
         constant_kind: this.conditions_constant_kind,
         temperature: parseInt(this.conditions_temperature),
         temperature_varies: this.conditions_temperature_varies,
         ionic_strength: parseInt(this.conditions_ionic_strength)
       }
-      // turn the data into a writeRequest object
+
+      const equilibriumExpressioninfo: EquilibriumExpressionData = {
+        expression_string: this.expression_string,
+        // parse me!!!
+        products: this.parseExpressionEntryList(this.products),
+        reactants: this.parseExpressionEntryList(this.reactants)
+      }
+
+      const constantsinfo: ConstantsData = {
+        value: parseInt(this.constants_value),
+        significant_figures: parseInt(this.constants_significant_figures),
+        user_id: getUserID()
+      }
+
+      const uncertaintiesinfo: UncertaintiesData = {
+        direction: this.direction,
+        magnitude: parseInt(this.magnitude)
+      }
+
+      const literatureinfo: LiteratureData = {
+        litref: this.litref,
+        litcode: this.litcode
+      }
+
+      const footnoteinfo: FootnotesData = {
+        notes: [{
+          type: (this.note_type as footnoteType) ?? null,
+          content: this.note_content
+        }]
+      }
+
       const writeData: writeRequest = {
-        metalInfo: metalInput,
-        conditionsInfo: conditionsInput
+        metalInfo: metalinfo,
+        ligandInfo: ligandinfo,
+        conditionsInfo: conditionsinfo,
+        equilibriumExpressionInfo: equilibriumExpressioninfo,
+        constantsInfo: constantsinfo,
+        uncertaintiesInfo: uncertaintiesinfo,
+        literaturesInfo: literatureinfo,
+        footnotesInfo: footnoteinfo
       }
 
       console.log("Sending Request")
@@ -195,7 +192,46 @@ export default defineComponent({
 
     updateField(input: {fieldToChange: String, dataToSend: any}) {
       // I should be sent to live on a butterfly farm for this line
+      // vscode flags this as an error but it works anyways. funny how life woks
       this.$data[input.fieldToChange] = input.dataToSend
+    },
+    parseMolecularFormula(str: string): MolecularFormula {
+      const atoms: Atom[] = [];
+      const regex = /\([a-zA-Z]+,\d+\)/g;
+
+      if (!str) return ({atoms: atoms, charge: -1} as MolecularFormula);
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      [...str.matchAll(regex)].forEach((match, _) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        match.forEach((value, _) => {
+
+          const [atomStr, atomCountStr] = str.substring(1, str.length - 1).split(",");
+          const element = atomStr as Element;
+          const atomCount = +atomCountStr;
+
+          if (isNaN(atomCount)) throw new TypeError(`invalid amount in record atomCount: [${atomStr}][${atomCountStr}]`);
+          var newAtom = {element: element, count:AtomCount} as Atom;
+          atoms.push(newAtom);
+        });
+      });
+
+      const charge = +(str.split(",").at(-1)?.replace(")", "") ?? "");
+
+      if (isNaN(charge)) throw new TypeError(`invalid amount in record charge`);
+      return ({atoms:atoms, charge:charge} as MolecularFormula);
+    },
+    parseExpressionEntryList(str: string): ExpressionEntry[] {
+
+      var expressionList: ExpressionEntry[] = [];
+      const elements = str.replace(/\s/g, "").split("),(");
+      elements.forEach((expr) => {
+        const [speciesStr, equivalentsStr] = expr.split(',')
+        const equivalentsNum = +(parseInt(equivalentsStr));
+        if (isNaN(equivalentsNum)) throw new TypeError(`invalid amount in record equivalents: [${equivalentsStr}]`);
+        expressionList.push({species:speciesStr, equivalents:equivalentsNum} as ExpressionEntry)
+      })
+      return expressionList;        
     }
   }
 })
