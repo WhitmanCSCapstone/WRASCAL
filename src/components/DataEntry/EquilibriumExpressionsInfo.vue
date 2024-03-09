@@ -1,5 +1,5 @@
 <template>
-    <h2>Equilibrium Expression Information</h2>
+    <h2>Equilibrium Expression</h2>
     <v-row class="pt-8">
       <v-col cols="12" md="6">
         <v-text-field
@@ -34,10 +34,10 @@
       </v-col>
     </v-row>
   </template>
-  
+
   <script lang="ts">
   import { defineComponent } from 'vue';
-  
+
   export default defineComponent ({
       name: "EquilibriumExpressionInfo",
       props: {
@@ -51,11 +51,10 @@
           products: [], // Define products array
           reactants: [] // Define reactants array
       }),
-      methods: { 
+      methods: {
           entry(fieldToChange: String, dataToSend: any) {
               this.$emit('entry', {'fieldToChange': fieldToChange, 'dataToSend': dataToSend})
           }
       }
   })
   </script>
-  
