@@ -1,5 +1,5 @@
 <template>
-    <h2>Ligand Information</h2>
+    <h2>Ligand</h2>
     <v-row class="pt-8">
         <!-- Ligand Name -->
         <v-col cols="12" md="6">
@@ -10,18 +10,6 @@
                 :loading="isLoading ?? false"
                 @change="entry('ligand_name', ligand_name)"
                 v-model:model-value="ligand_name"
-            ></v-text-field>
-        </v-col>
-
-        <!-- Molecular Formula Charge -->
-        <v-col cols="12" md="6">
-            <v-text-field
-                label="Molecular Formula Charge"
-                prepend-icon="mdi-gold"
-                variant="solo"
-                :loading="isLoading ?? false"
-                @change="entry('molecular_formula_charge', molecular_formula_charge)"
-                v-model:model-value="molecular_formula_charge"
             ></v-text-field>
         </v-col>
 

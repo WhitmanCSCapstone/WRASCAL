@@ -2,11 +2,20 @@
   <v-container class="pt-8">
 
     <h1> New Entry Submission </h1><br>
-    <ConditionsInfo :isLoading="isLoading" @entry="updateField"/>    
+
+    <MetalInfo  :isLoading="isLoading" v-model:metal_id="this.metal_id" @entry="updateField"/>
+
+    <LigandInfo :isLoading="isLoading" @entry="updateField"/>
+
+    <ConditionsInfo :isLoading="isLoading" @entry="updateField"/>
 
     <ConstantsInfo :isLoading="isLoading" @entry="updateField"/>
 
-    
+    <UncertaintiesInfo :isLoading="isLoading" @entry="updateField"/>
+
+    <LiteraturesInfo :isLoading="isLoading" @entry="updateField"/>
+
+    <FootnotesInfo :isLoading="isLoading" @entry="updateField"/>
 
     <v-btn id="sumbitbutton" type="submit" block class="mt-2" color="primary" @click="submitForm">Submit</v-btn>
   </v-container>
@@ -37,6 +46,32 @@ import { MetalData,
         } from '../models/writeRequest'
 import LigandInfo from '@/components/DataEntry/LigandInfo.vue';
 import { NoteType } from '@/models/Note';
+import MetalInfo from "@/components/DataEntry/MetalInfo.vue";
+import ConditionsInfo from "@/components/DataEntry/ConditionsInfo.vue";
+import ConstantsInfo from "@/components/DataEntry/ConstantsInfo.vue";
+import LigandInfo from '@/components/DataEntry/LigandInfo.vue';
+import FootnotesInfo from '@/components/DataEntry/FootnotesInfo.vue';
+import UncertaintiesInfo from '@/components/DataEntry/UncertaintiesInfo.vue';
+import LiteraturesInfo from '@/components/DataEntry/LiteraturesInfo.vue';
+
+interface metalData {
+  central_element: string;
+  formula_string: string;
+  charge: number;
+}
+
+interface conditionsData {
+  constant_kind: string;
+  temperature: number;
+  temperature_varies: boolean;
+  ionic_strength: number;
+}
+
+// will become own file eventually
+interface writeRequest {
+  metalInfo: metalData;
+  conditionsInfo: conditionsData;
+}
 
 // POSTs the data to backend API endpoint. Reciever is currently in wrascal-ts-2024
 // repository, under src/controllers/rest/api/WriteController.ts
@@ -73,7 +108,7 @@ export default defineComponent({
       default: false
     },
   },
-  components:{ MetalInfo , ConditionsInfo, ConstantsInfo},
+  components:{ MetalInfo , ConditionsInfo, ConstantsInfo, LigandInfo, FootnotesInfo, UncertaintiesInfo, LiteraturesInfo},
   data: () => ({
     // all data is prefixed_ with the component it came from!
 

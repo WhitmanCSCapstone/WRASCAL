@@ -1,5 +1,5 @@
 <template>
-    <h2>Constants Information</h2>
+    <h2>Constants</h2>
     <v-row class="pt-8">
       <v-col cols="12" md="6">
         <v-text-field
@@ -23,10 +23,10 @@
       </v-col>
     </v-row>
   </template>
-  
+
   <script lang="ts">
   import { defineComponent } from 'vue'
-  
+
   export default defineComponent({
     name: 'ConstantsInfo',
     props: {
@@ -54,4 +54,3 @@
     }
   })
   </script>
-  

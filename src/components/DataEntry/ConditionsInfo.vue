@@ -1,5 +1,5 @@
 <template>
-    <h2> Conditions Information </h2>
+    <h2> Conditions</h2>
     <v-row class="pt-8">
         <v-col
         cols="12"
@@ -38,7 +38,7 @@
             @input="entry('conditions_temperature_varies', temperature_varies)"
             v-model:model-value="temperature_varies"
         ></v-checkbox>
-        </v-col>    
+        </v-col>
         <v-col
         cols="12"
         md="3"
@@ -74,8 +74,8 @@ export default defineComponent ({
         temperature_varies: false,
         ionic_strength: '',
     }),
-    methods: { 
-        // Data must be sent as {string, data} because the other end uses javascript tomshittery to 
+    methods: {
+        // Data must be sent as {string, data} because the other end uses javascript tomshittery to
         // interpret fieldToChange as a variable name. I have no idea why this works and I hate
         // it but whatever, it works.
         entry(fieldToChange: String, dataToSend: any) { // listener is in /views/NewEntry.vue

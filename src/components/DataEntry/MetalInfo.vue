@@ -1,6 +1,7 @@
 <template>
-    <h2> Metal Information </h2>
+    <h2>Metal</h2>
         <v-row class="pt-8">
+
             <v-col
             cols="12"
             md="2"
@@ -46,7 +47,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 
-export default defineComponent ({ 
+export default defineComponent ({
     name: "MetalInfo",
     props: {
         isLoading: {
@@ -65,7 +66,7 @@ export default defineComponent ({
         metal_charge: ''
     }),
     methods: {
-        // Data must be sent as {string, data} because the other end uses javascript tomshittery to 
+        // Data must be sent as {string, data} because the other end uses javascript tomshittery to
         // interpret fieldToChange as a variable name. I have no idea why this works and I hate
         // it but whatever, it works.
         entry(fieldToChange: String, dataToSend: any) { // listener is in /views/NewEntry.vue
