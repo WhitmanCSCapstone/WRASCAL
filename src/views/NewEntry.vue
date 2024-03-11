@@ -3,7 +3,7 @@
 
     <h1> New Entry Submission </h1><br>
 
-    <MetalInfo  :isLoading="isLoading" v-model:metal_id="this.metal_id" @entry="updateField"/>
+    <MetalInfo  :isLoading="isLoading" @entry="updateField"/>
 
     <LigandInfo :isLoading="isLoading" @entry="updateField"/>
 
@@ -23,10 +23,16 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import MetalInfo from "../components/DataEntry/MetalInfo.vue";
-import ConditionsInfo from "../components/DataEntry/ConditionsInfo.vue";
-import ConstantsInfo from "../components/DataEntry/ConstantsInfo.vue";
-import { networkInterfaces } from 'os';
+import LigandInfo from '@/components/DataEntry/LigandInfo.vue';
+import { NoteType } from '@/models/Note';
+import MetalInfo from "@/components/DataEntry/MetalInfo.vue";
+import ConditionsInfo from "@/components/DataEntry/ConditionsInfo.vue";
+import ConstantsInfo from "@/components/DataEntry/ConstantsInfo.vue";
+import FootnotesInfo from '@/components/DataEntry/FootnotesInfo.vue';
+import UncertaintiesInfo from '@/components/DataEntry/UncertaintiesInfo.vue';
+import LiteraturesInfo from '@/components/DataEntry/LiteraturesInfo.vue';
+
+
 import { Element } from '@/models/enums/element';
 import { footnoteType } from '@/models/enums/footnoteType'
 import { MetalData, 
@@ -44,34 +50,7 @@ import { MetalData,
           FootnotesData,
           writeRequest 
         } from '../models/writeRequest'
-import LigandInfo from '@/components/DataEntry/LigandInfo.vue';
-import { NoteType } from '@/models/Note';
-import MetalInfo from "@/components/DataEntry/MetalInfo.vue";
-import ConditionsInfo from "@/components/DataEntry/ConditionsInfo.vue";
-import ConstantsInfo from "@/components/DataEntry/ConstantsInfo.vue";
-import LigandInfo from '@/components/DataEntry/LigandInfo.vue';
-import FootnotesInfo from '@/components/DataEntry/FootnotesInfo.vue';
-import UncertaintiesInfo from '@/components/DataEntry/UncertaintiesInfo.vue';
-import LiteraturesInfo from '@/components/DataEntry/LiteraturesInfo.vue';
-
-interface metalData {
-  central_element: string;
-  formula_string: string;
-  charge: number;
-}
-
-interface conditionsData {
-  constant_kind: string;
-  temperature: number;
-  temperature_varies: boolean;
-  ionic_strength: number;
-}
-
-// will become own file eventually
-interface writeRequest {
-  metalInfo: metalData;
-  conditionsInfo: conditionsData;
-}
+import { AccessTokenResponse } from '@/models/UserData';
 
 // POSTs the data to backend API endpoint. Reciever is currently in wrascal-ts-2024
 // repository, under src/controllers/rest/api/WriteController.ts
@@ -230,6 +209,7 @@ export default defineComponent({
       // vscode flags this as an error but it works anyways. funny how life woks
       this.$data[input.fieldToChange] = input.dataToSend
     },
+    // parse the string version of a molecular formula
     parseMolecularFormula(str: string): MolecularFormula {
       const atoms: Atom[] = [];
       const regex = /\([a-zA-Z]+,\d+\)/g;
@@ -256,6 +236,7 @@ export default defineComponent({
       if (isNaN(charge)) throw new TypeError(`invalid amount in record charge`);
       return ({atoms:atoms, charge:charge} as MolecularFormula);
     },
+    // parse the string version of an expression entry list
     parseExpressionEntryList(str: string): ExpressionEntry[] {
 
       var expressionList: ExpressionEntry[] = [];

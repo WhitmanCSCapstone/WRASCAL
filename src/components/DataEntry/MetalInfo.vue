@@ -53,10 +53,6 @@ export default defineComponent ({
         isLoading: {
             type: Boolean,
             default: false
-        },
-        metal_id: {
-            type: String,
-            default: ''
         }
     },
     data: () => ({
