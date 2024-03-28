@@ -15,7 +15,7 @@ export interface Atom {
 export interface MolecularFormula {
   atoms: Atom[]
   charge: number
-};;
+};
 
 export interface form {
   protonation_level: number;

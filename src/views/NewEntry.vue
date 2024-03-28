@@ -3,6 +3,9 @@
 
     <h1> New Entry Submission </h1><br>
 
+    <!-- Each component corresponds to a single table in the database -->
+    <!-- Current known bugs: Ligand Molecular Formula is not correctly writing to the parent variable -->
+
     <MetalInfo  :isLoading="isLoading" @entry="updateField"/>
 
     <LigandInfo :isLoading="isLoading" @entry="updateField"/>
@@ -79,6 +82,8 @@ function getUserID() {
   return accessTokenResponse.user.id;
 }
 
+
+// necessary for all vue components. As this component does not communicate with a parent, props (besides loading) are unneccesary.
 export default defineComponent({
   name: "NewEntryForm",
   props: {
@@ -87,6 +92,7 @@ export default defineComponent({
       default: false
     },
   },
+  // child components must be ported into the parent. Other added components must be placed here.
   components:{ MetalInfo , ConditionsInfo, ConstantsInfo, LigandInfo, FootnotesInfo, UncertaintiesInfo, LiteraturesInfo},
   data: () => ({
     // all data is prefixed_ with the component it came from!
@@ -134,6 +140,11 @@ export default defineComponent({
   methods: {
     submitForm() {
 
+      console.log("ligand molecular formula", this.ligand_molecular_formala);
+
+      // assembling the data into individual interfaces makes json structure easier to read and parse by the backend,
+      // even though it's somewhat bloated here. Is there perhaps a better way to do this?
+
       const metalinfo: MetalData = {
         central_element: this.metal_central_element,
         formula_string: this.metal_formula_string,
@@ -141,14 +152,16 @@ export default defineComponent({
       }
 
       const ligandinfo: LigandData = {
-        name: this.ligand_name,
+        name: this.ligand_name ?? "",
+        // known bug - this.ligand_molecular_formula always reads blank, even though the write from the form itself is fine.
+        // the variable is being cleared sometime between when submit is pressed and the value is read here.
         molecular_formula: this.parseMolecularFormula(this.ligand_molecular_formala),
         form: {
-          protonation_level: parseInt(this.ligand_form_protonation),
-          charge: parseInt(this.ligand_form_charge)
+          protonation_level: parseInt(this.ligand_form_protonation) ?? 0,
+          charge: parseInt(this.ligand_form_charge) ?? 0
         } as form,
-        charge: parseInt(this.ligand_charge),
-        categories: this.ligand_categories.split(",")
+        charge: parseInt(this.ligand_charge) ?? 0,
+        categories: this.ligand_categories.split(",") ?? []
       }
 
       const conditionsinfo: ConditionsData = {
@@ -160,7 +173,6 @@ export default defineComponent({
 
       const equilibriumExpressioninfo: EquilibriumExpressionData = {
         expression_string: this.expression_string,
-        // parse me!!!
         products: this.parseExpressionEntryList(this.products),
         reactants: this.parseExpressionEntryList(this.reactants)
       }
@@ -188,6 +200,7 @@ export default defineComponent({
         }]
       }
 
+      // the object that actually gets sent in the post request
       const writeData: writeRequest = {
         metalInfo: metalinfo,
         ligandInfo: ligandinfo,
@@ -205,9 +218,11 @@ export default defineComponent({
     },
 
     updateField(input: {fieldToChange: String, dataToSend: any}) {
+      console.log("field updated: ", input.fieldToChange)
       // I should be sent to live on a butterfly farm for this line
       // vscode flags this as an error but it works anyways. funny how life woks
       this.$data[input.fieldToChange] = input.dataToSend
+      console.log("new value: ", this.$data[input.fieldToChange]);
     },
     // parse the string version of a molecular formula
     parseMolecularFormula(str: string): MolecularFormula {
@@ -220,13 +235,12 @@ export default defineComponent({
       [...str.matchAll(regex)].forEach((match, _) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         match.forEach((value, _) => {
-
-          const [atomStr, atomCountStr] = str.substring(1, str.length - 1).split(",");
-          const element = atomStr as Element;
-          const atomCount = +atomCountStr;
+          const [atomStr, atomCountStr] = value.substring(1, value.length - 1).split(",");
+          const element = atomStr;
+          const atomCount = parseInt(atomCountStr);
 
           if (isNaN(atomCount)) throw new TypeError(`invalid amount in record atomCount: [${atomStr}][${atomCountStr}]`);
-          var newAtom = {element: element, count:AtomCount} as Atom;
+          var newAtom = {element: element, count:atomCount} as Atom;
           atoms.push(newAtom);
         });
       });
@@ -239,6 +253,8 @@ export default defineComponent({
     // parse the string version of an expression entry list
     parseExpressionEntryList(str: string): ExpressionEntry[] {
 
+      if(!str) return [];
+      
       var expressionList: ExpressionEntry[] = [];
       const elements = str.replace(/\s/g, "").split("),(");
       elements.forEach((expr) => {

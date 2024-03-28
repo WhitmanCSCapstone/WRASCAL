@@ -37,6 +37,18 @@
             ></v-text-field>
         </v-col>
 
+        <!-- Ligand Formula -->
+        <v-col cols="12" md="6">
+            <v-text-field
+                label="Ligand Molecular Formula"
+                prepend-icon="mdi-gold"
+                variant="solo"
+                :loading="isLoading ?? false"
+                @change="entry('ligand_molecular_formula', ligand_molecular_formula)"
+                v-model:model-value="ligand_molecular_formula"
+            ></v-text-field>
+        </v-col>
+
         <!-- Ligand Charge -->
         <v-col cols="12" md="6">
             <v-text-field
@@ -79,6 +91,7 @@ export default defineComponent ({
         molecular_formula_charge: '',
         ligand_form_protonation: '',
         ligand_form_charge: '',
+        ligand_molecular_formula: '',
         ligand_charge: '',
         ligand_categories: ''
     }),
