@@ -41,6 +41,7 @@
         <v-col cols="12" md="6">
             <ChemInput
             :name="ligand_molecular_formula_name"
+            :length="ligand_molecular_formula_width"
             @compute-formula="entry('ligand_molecular_formula', $event)"
             @compute-charge="entry('ligand_charge', $event)"/>
         </v-col>
@@ -92,7 +93,8 @@ export default defineComponent ({
         ligand_molecular_formula: '',
         ligand_charge: '',
         ligand_categories: '',
-        ligand_molecular_formula_name: 'Ligand Molecular Formula'
+        ligand_molecular_formula_name: 'Ligand Molecular Formula',
+        ligand_molecular_formula_width: "300px",
     }),
     methods: {
         entry(fieldToChange: String, dataToSend: any) {

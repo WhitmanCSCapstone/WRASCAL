@@ -6,6 +6,7 @@ class NotImplementedError extends Error {
 }
 
 export function surroundTextWithTag(button) {
+    this.removePlaceholder()
     if (this.activeButton === button) {
         this.surroundTextWithTag('normal_button');
         return;
@@ -60,6 +61,13 @@ export function insertOperator(char_entity) {
 
 export function compute(_input) {
 
+    // used to go back to equation
+    if (this.isConverted){
+        this.isConverted = false;
+        this.input = this.previous;
+        return _input;
+    }
+    
     // Make copy instead of reference
     let input = _input; 
 
@@ -137,6 +145,14 @@ export function compute(_input) {
             pairs.push(format_array([elementName, subscript ? subscript[1] : 1]));
         }       
     }
+    if (isNaN(charge)) {
+        charge = 0;
+    }
+
+    // if no errors occured, update state and store previous
+    this.isConverted = true;
+    this.previous = _input;
+
     this.$emit('compute-formula', format_array(pairs));
     this.$emit('compute-charge', charge);
     return format_array([pairs, charge]);
@@ -301,13 +317,23 @@ export function updateText(event) {
 }
 
 export function removePlaceholder(event) {
-    if (this.input === this.name) {
-    this.input = '';
+    if (this.$refs.myTextBox.textContent === this.name || this.input === this.name) {
+        this.$refs.myTextBox.textContent = '';
+        this.input = '';
     }
 }
 
+// TODO: does not replace if the user clicks sub/sup and then clicks out 
 export function addPlaceholder(event) {
-    if (this.input === '') {
-    this.input = this.name;
+    if (this.$refs.myTextBox.textContent === '') {
+        this.$refs.myTextBox.textContent = this.name;
     }
+}
+
+export function showPopup() {
+    this.showingPopup = true;
+}
+
+export function hidePopup() {
+    this.showingPopup = false;
 }

@@ -34,16 +34,9 @@
             >
                 <ChemInput
                 :name="formula_string_name"
+                :width="formula_string_width"
                 @compute-formula="entry('ligand_molecular_formula', $event)"
                 @compute-charge="entry('ligand_charge', $event)"/>
-                <!-- <v-text-field
-                label="Formula String"
-                prepend-icon="mdi-gold"
-                variant="solo"
-                :loading="isLoading ?? false"
-                @change="entry('metal_formula_string', metal_formula_string)"
-                v-model:model-value="metal_formula_string"
-                ></v-text-field> -->
             </v-col>
         </v-row>
 </template>
@@ -67,6 +60,7 @@ export default defineComponent ({
         metal_formula_string: '',
         metal_charge: '',
         formula_string_name: 'Formula String',
+        formula_string_width: '300px',
     }),
     methods: {
         // Data must be sent as {string, data} because the other end uses javascript tomshittery to
