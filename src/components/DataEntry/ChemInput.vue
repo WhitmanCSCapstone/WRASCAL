@@ -20,8 +20,8 @@
     <div class="button-container">
       <button class="question-button" @click="showPopup">?</button>
       <button :class="{ 'highlighted': activeButton === 'normal_button' }" @click="surroundTextWithTag('normal_button')">X</button>
-      <button :class="{ 'highlighted': activeButton === 'sup_button' }" @click="surroundTextWithTag('sup_button')">X<sup>y</sup></button>
-      <button :class="{ 'highlighted': activeButton === 'sub_button' }" @click="surroundTextWithTag('sub_button')">X<sub>y</sub></button>
+      <button :class="{ 'highlighted': activeButton === 'sup_button' }" @click="surroundTextWithTag('sup_button')">X<sup>2</sup></button>
+      <button :class="{ 'highlighted': activeButton === 'sub_button' }" @click="surroundTextWithTag('sub_button')">X<sub>2</sub></button>
       <button :class="{ 'highlighted': activeButton === 'compute_button' }" @click="this.input = compute(this.displayText)">
         {{ isConverted ? 'Revert' : 'Convert' }}
       </button>
@@ -29,10 +29,10 @@
   </div>
   <!-- Popup content -->
   <div v-if="showingPopup" class="popup">
-    The WRASCAL database can only parse chemical equations in a standardized syntax. It cannot read 
-    super or subscript. Use the given buttons to input compounds, then press the "convert" button to 
-    automatically generate the input. This format includes a paired list of elements and their total 
-    charge. Click the button again to revert the output to a standard chemical equation.
+    The WRASCAL database cannot interpret the molecular formula and can only parse molecules in a "WRASCAL syntax". 
+    Use the given buttons to input molecules, then press the "convert" button to automatically generate the input. 
+    The WRASCAL format includes a paired list of elements and their total charge. 
+    Click the button again to revert the output to a standard molecular formula.
     <button class="close-button" @click="hidePopup">Close</button>
   </div>
 </template>

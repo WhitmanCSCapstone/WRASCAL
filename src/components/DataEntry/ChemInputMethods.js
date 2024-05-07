@@ -5,6 +5,13 @@ class NotImplementedError extends Error {
     }
 }
 
+/**
+ * Surrounds the selected text with specified HTML tags
+ * inserts tags at an invisible character with caret position if no text is selected.
+ * 
+ * @param {string} button - The button identifier corresponding to the HTML tags to be applied.
+ * @returns {void}
+ */
 export function surroundTextWithTag(button) {
     this.removePlaceholder()
     if (this.activeButton === button) {
@@ -31,6 +38,18 @@ export function surroundTextWithTag(button) {
     this.activeButton = button;
 }
 
+// 
+/**
+ * NOT CURRENTLY USED
+ * 
+ * Prototype feature for sub and superscript.
+ * Surrounds the selected text with superscript and subscript tags.
+ * Adds two placeholder characters at the caret position if no text is selected.
+ * Puts puts text in super and subscript in format when space-seperated text is highlighted.
+ * TODO: super and subscript highlighted: puts them in format.
+ * 
+ * @returns {void}
+ */
 export function surroundTextWithboth() {
     let selectedText = this.removeTemplateLiterals(this.getSelectedText());
     if (selectedText.length === 0) {
@@ -51,6 +70,12 @@ export function surroundTextWithboth() {
     this.activeButton = 'normal_button';
 }
 
+/**
+ * Inserts a character entity into the selected text in the document.
+ * 
+ * @param {string} char_entity - The character entity to be inserted.
+ * @returns {void}
+ */
 export function insertOperator(char_entity) {
     const selectedText = this.getSelectedText();
     let newText = '';
@@ -59,6 +84,13 @@ export function insertOperator(char_entity) {
     this.activeButton = 'normal_button';
 }
 
+/**
+ * Computes the chemical formula and charge from the given input text.
+ * 
+ * @param {string} _input - The input text containing chemical symbols and subscripts.
+ * @returns {string|array} - If successful, returns an array containing the computed chemical formula and charge. 
+ *                           If input is empty or contains errors, returns an error message.
+ */
 export function compute(_input) {
 
     // used to go back to equation
@@ -158,14 +190,27 @@ export function compute(_input) {
     return format_array([pairs, charge]);
 }
 
+/**
+ * Formats an array into a string representation with elements separated by commas and enclosed within curly braces.
+ * 
+ * @param {Array} input - The array to be formatted.
+ * @returns {string} A string representation of the array with elements separated by commas and enclosed within curly braces.
+ */
 function format_array(input) {
-    let output = '{' + input.join(', ') + '}'; 
+    let output = '{' + input.join(',') + '}'; 
     return output;
 }
 
-// Split stacked text into subscript and superscript.
-//    Input: <span class="stacked"><sup>Y</sup><sub>Z</sub></span>
-//    Output: <sup>Y</sup><sub>Z</sub> (could also be <sub>Z</sub><sup>Y</sup>)
+/**
+ * NOT CURRENTLY USED
+ * Unstacks text by removing HTML spans with the method "stacked()".
+ * 
+ * Input: <span class="stacked"><sup>Y</sup><sub>Z</sub></span>
+ * Output: <sup>Y</sup><sub>Z</sub> (could also be <sub>Z</sub><sup>Y</sup>)
+ * 
+ * @param {string} input - The input text containing stacked spans.
+ * @returns {string} The text with stacked spans removed.
+ */
 export function unstackText(input) {
     let output = '';
     let j = 0;
@@ -185,22 +230,32 @@ export function unstackText(input) {
     return output;
 }
 
+/**
+ * Helper function for compute() used to calculate the charge of an entire input.
+ * Handles negative charges in the format: 2-, not -2.
+ * 
+ * @param {string} input - The input string containing ENTIRE chemical formula with charge annotations in superscript tags.
+ * @returns {[string, number]} An array containing the original input string and the net charge calculated from the annotations.
+ */
 export function calculateCharge(input) {
     let charge = 0;
+    let currentCharge_int = 0;
     let currentCharge = '';
     for (let i = 0; i < input.length; i++) {
     if (input.slice(i, i + 5) === '<sup>') {
         i += 5;          
         while (input.slice(i, i + 6) !== '</sup>') {
-        currentCharge += input[i];
-        i++;
+            currentCharge += input[i];
+            i++;
         }
         if (currentCharge === '-') {
-        charge -= 1;
+            charge -= 1;
         } else if (currentCharge === '+') {
-        charge += 1;
+            charge += 1;
+        } else if (currentCharge[currentCharge.length - 1] === "-"){
+            charge -= parseInt(currentCharge);
         } else {
-        charge += parseInt(currentCharge);
+            charge += parseInt(currentCharge);
         }
         currentCharge = '';
     }
@@ -208,7 +263,114 @@ export function calculateCharge(input) {
     return [input, charge];
 }
 
-// TODO: make tests actually work
+/**
+ * Retrieves the currently selected text in the document.
+ * 
+ * @returns {string|null} The selected text if any, otherwise null.
+ */
+export function getSelectedText() {
+    const selection = window.getSelection();
+    if (selection.rangeCount > 0) {
+    const range = selection.getRangeAt(0);
+    return range.toString();
+    }
+    return null;
+}
+
+/**
+ * NOT CURRENTLY USED
+ * 
+ * Updates the caret position based on the current selection in the specified text box.
+ */
+export function updateCaretPosition() {
+    const selection = window.getSelection();
+    if (selection.rangeCount > 0) {
+    const range = selection.getRangeAt(0);
+    const preCaretRange = range.cloneRange();
+    preCaretRange.selectNodeContents(this.$refs.myTextBox);
+    preCaretRange.setEnd(range.endContainer, range.endOffset);
+    this.caretPosition = preCaretRange.toString().length;
+    }
+}
+
+/**
+ * NOT CURRENTLY USED
+ * 
+ */
+export function removeAdjacent(char){
+    throw new NotImplementedError();
+}
+
+/**
+ * Normalizes operators in the display text by removing template literals.
+ */
+export function normalizeOperators(){
+    for (let i; i < this.displayText.length; i++){
+    if (this.operators.has(this.displayText[i])){
+        this.removeTemplateLiterals(this.displayText[i]);
+    }
+    }
+}
+
+/**
+ * Removes template literals from a string.
+ * Helper method for normalizeOperators()
+ * 
+ * @param {string} str - The input string containing template literals.
+ * @returns {string} The input string with template literals removed.
+ */
+export function removeTemplateLiterals(str) {
+    const regex = /\${(.*?)}/g;
+    return str.replace(regex, '');
+}
+
+/**
+ * Updates the display text based on the inner HTML of the event target and normalizes operators.
+ * 
+ * @param {Event} event - The event object containing the target element.
+ */
+export function updateText(event) {
+    this.displayText = event.target.innerHTML;
+    this.normalizeOperators();
+}
+
+/**
+ * Removes the placeholder text from the text box if it matches the predefined name.
+ * Predefined name passed as input for the template.
+ * 
+ * @param {Event} event - The event object triggering the function.
+ */
+export function removePlaceholder(event) {
+    if (this.$refs.myTextBox.textContent === this.name || this.input === this.name) {
+        this.$refs.myTextBox.textContent = '';
+        this.input = '';
+    }
+}
+
+/**
+ * Adds placeholder text to the text box if it is empty. 
+ * 
+ * @param {Event} event - The event object triggering the function.
+ */
+export function addPlaceholder(event) {
+    if (this.$refs.myTextBox.textContent === '') {
+        this.$refs.myTextBox.textContent = this.name;
+    }
+}
+
+/**
+ * Show/hide the informational popup by setting the 'showingPopup' flag to true/false.
+ */
+export function showPopup() {
+    this.showingPopup = true;
+}
+export function hidePopup() {
+    this.showingPopup = false;
+}
+
+/**
+ * Unit test for for compute().
+ */
 export function computeTestCases() {
     let tests = {
     // Expected inputs
@@ -272,68 +434,4 @@ export function computeTestCases() {
         console.log(`Received: ${this.compute(testKeys[i])}`);
     }
     }
-}
-
-export function getSelectedText() {
-    const selection = window.getSelection();
-    if (selection.rangeCount > 0) {
-    const range = selection.getRangeAt(0);
-    return range.toString();
-    }
-    return null;
-}
-
-export function updateCaretPosition() {
-    const selection = window.getSelection();
-    if (selection.rangeCount > 0) {
-    const range = selection.getRangeAt(0);
-    const preCaretRange = range.cloneRange();
-    preCaretRange.selectNodeContents(this.$refs.myTextBox);
-    preCaretRange.setEnd(range.endContainer, range.endOffset);
-    this.caretPosition = preCaretRange.toString().length;
-    }
-}
-
-export function removeAdjacent(char){
-    throw new NotImplementedError();
-}
-
-export function normalizeOperators(){
-    for (let i; i < this.displayText.length; i++){
-    if (this.operators.has(this.displayText[i])){
-        this.removeTemplateLiterals(this.displayText[i]);
-    }
-    }
-}
-
-export function removeTemplateLiterals(str) {
-    const regex = /\${(.*?)}/g;
-    return str.replace(regex, '');
-}
-
-export function updateText(event) {
-    this.displayText = event.target.innerHTML;
-    this.normalizeOperators();
-}
-
-export function removePlaceholder(event) {
-    if (this.$refs.myTextBox.textContent === this.name || this.input === this.name) {
-        this.$refs.myTextBox.textContent = '';
-        this.input = '';
-    }
-}
-
-// TODO: does not replace if the user clicks sub/sup and then clicks out 
-export function addPlaceholder(event) {
-    if (this.$refs.myTextBox.textContent === '') {
-        this.$refs.myTextBox.textContent = this.name;
-    }
-}
-
-export function showPopup() {
-    this.showingPopup = true;
-}
-
-export function hidePopup() {
-    this.showingPopup = false;
 }
