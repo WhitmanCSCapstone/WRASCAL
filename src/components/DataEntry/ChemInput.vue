@@ -15,29 +15,49 @@
       @keyup="updateText"
       @mouseup="updateText"
       @blur="addPlaceholder"
-      :style="{ width: this.width }" 
+      :style="{ width: this.width }"
     ></div>
     <div class="button-container">
       <button class="question-button" @click="showPopup">?</button>
-      <button :class="{ 'highlighted': activeButton === 'normal_button' }" @click="surroundTextWithTag('normal_button')">X</button>
-      <button :class="{ 'highlighted': activeButton === 'sup_button' }" @click="surroundTextWithTag('sup_button')">X<sup>2</sup></button>
-      <button :class="{ 'highlighted': activeButton === 'sub_button' }" @click="surroundTextWithTag('sub_button')">X<sub>2</sub></button>
-      <button :class="{ 'highlighted': activeButton === 'compute_button' }" @click="this.input = compute(this.displayText)">
-        {{ isConverted ? 'Revert' : 'Convert' }}
+      <button
+        :class="{ highlighted: activeButton === 'normal_button' }"
+        @click="surroundTextWithTag('normal_button')"
+      >
+        X
+      </button>
+      <button
+        :class="{ highlighted: activeButton === 'sup_button' }"
+        @click="surroundTextWithTag('sup_button')"
+      >
+        X<sup>2</sup>
+      </button>
+      <button
+        :class="{ highlighted: activeButton === 'sub_button' }"
+        @click="surroundTextWithTag('sub_button')"
+      >
+        X<sub>2</sub>
+      </button>
+      <button
+        :class="{ highlighted: activeButton === 'compute_button' }"
+        @click="this.input = compute(this.displayText)"
+      >
+        {{ isConverted ? "Revert" : "Convert" }}
       </button>
     </div>
   </div>
   <!-- Popup content -->
   <div v-if="showingPopup" class="popup">
-    The WRASCAL database cannot interpret the molecular formula and can only parse molecules in a "WRASCAL syntax". 
-    Use the given buttons to input molecules, then press the "convert" button to automatically generate the input. 
-    The WRASCAL format includes a paired list of elements and their total charge. 
-    Click the button again to revert the output to a standard molecular formula.
+    The WRASCAL database cannot interpret the molecular formula and can only
+    parse molecules in a "WRASCAL syntax". Use the given buttons to input
+    molecules, then press the "convert" button to automatically generate the
+    input. The WRASCAL format includes a paired list of elements and their total
+    charge. Click the button again to revert the output to a standard molecular
+    formula.
     <button class="close-button" @click="hidePopup">Close</button>
   </div>
 </template>
 <script>
-import { defineComponent } from 'vue';
+import { defineComponent } from "vue";
 
 import {
   surroundTextWithTag,
@@ -55,7 +75,7 @@ import {
   addPlaceholder,
   showPopup,
   hidePopup,
-} from './ChemInputMethods.js';
+} from "./ChemInputMethods.vue";
 
 export default defineComponent({
   props: {
@@ -64,32 +84,135 @@ export default defineComponent({
     },
     width: {
       type: String,
-    }
+    },
   },
   data() {
     return {
       input: this.name,
-      activeButton: 'normal_button',
-      displayText: '',
-      computedText: '',
-      operators: new Set(['⇒', '⇄']),
+      activeButton: "normal_button",
+      displayText: "",
+      computedText: "",
+      operators: new Set(["⇒", "⇄"]),
       caretPosition: 0,
       tags: new Map([
-        ['sup_button', ['<sup>', '</sup>']],
-        ['sub_button', ['<sub>', '</sub>']],
-        ['normal_button', ['', '']]
+        ["sup_button", ["<sup>", "</sup>"]],
+        ["sub_button", ["<sub>", "</sub>"]],
+        ["normal_button", ["", ""]],
       ]),
       elements: new Set([
-        "H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", "Na", "Mg", "Al", "Si", "P", "S", "Cl", "Ar", "K",
-        "Ca", "Sc", "Ti", "V", "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As", "Se", "Br", "Kr", "Rb",
-        "Sr", "Y", "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Ag", "Cd", "In", "Sn", "Sb", "Te", "I", "Xe", "Cs",
-        "Ba", "La", "Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb", "Lu", "Hf", "Ta",
-        "W", "Re", "Os", "Ir", "Pt", "Au", "Hg", "Tl", "Pb", "Bi", "Po", "At", "Rn", "Fr", "Ra", "Ac", "Th", "Pa",
-        "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm", "Md", "No", "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt"
-    ]),
-    showingPopup: false,
-    isConverted: false,
-    previous: '',
+        "H",
+        "He",
+        "Li",
+        "Be",
+        "B",
+        "C",
+        "N",
+        "O",
+        "F",
+        "Ne",
+        "Na",
+        "Mg",
+        "Al",
+        "Si",
+        "P",
+        "S",
+        "Cl",
+        "Ar",
+        "K",
+        "Ca",
+        "Sc",
+        "Ti",
+        "V",
+        "Cr",
+        "Mn",
+        "Fe",
+        "Co",
+        "Ni",
+        "Cu",
+        "Zn",
+        "Ga",
+        "Ge",
+        "As",
+        "Se",
+        "Br",
+        "Kr",
+        "Rb",
+        "Sr",
+        "Y",
+        "Zr",
+        "Nb",
+        "Mo",
+        "Tc",
+        "Ru",
+        "Rh",
+        "Pd",
+        "Ag",
+        "Cd",
+        "In",
+        "Sn",
+        "Sb",
+        "Te",
+        "I",
+        "Xe",
+        "Cs",
+        "Ba",
+        "La",
+        "Ce",
+        "Pr",
+        "Nd",
+        "Pm",
+        "Sm",
+        "Eu",
+        "Gd",
+        "Tb",
+        "Dy",
+        "Ho",
+        "Er",
+        "Tm",
+        "Yb",
+        "Lu",
+        "Hf",
+        "Ta",
+        "W",
+        "Re",
+        "Os",
+        "Ir",
+        "Pt",
+        "Au",
+        "Hg",
+        "Tl",
+        "Pb",
+        "Bi",
+        "Po",
+        "At",
+        "Rn",
+        "Fr",
+        "Ra",
+        "Ac",
+        "Th",
+        "Pa",
+        "U",
+        "Np",
+        "Pu",
+        "Am",
+        "Cm",
+        "Bk",
+        "Cf",
+        "Es",
+        "Fm",
+        "Md",
+        "No",
+        "Lr",
+        "Rf",
+        "Db",
+        "Sg",
+        "Bh",
+        "Hs",
+        "Mt",
+      ]),
+      showingPopup: false,
+      isConverted: false,
+      previous: "",
     };
   },
   methods: {
@@ -108,7 +231,7 @@ export default defineComponent({
     addPlaceholder,
     showPopup,
     hidePopup,
-  }
+  },
 });
 </script>
 
@@ -131,18 +254,18 @@ export default defineComponent({
 }
 
 .text-box {
-    width: 300px;
-    height: 56px;
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 20px;
-    font-size: 16px;
-    outline: none;
-    color: var(--v-theme-on-background);
-    opacity: var(--v-medium-emphasis-opacity);
-    background-color: rgb(40, 40, 40);
-    box-shadow: 0 0px 6px rgba(0, 0, 0, 0.2), 0 1.5px 1.5px rgba(0, 0, 0, 0.4);
-    line-height: 36px;
+  width: 300px;
+  height: 56px;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  outline: none;
+  color: var(--v-theme-on-background);
+  opacity: var(--v-medium-emphasis-opacity);
+  background-color: rgb(40, 40, 40);
+  box-shadow: 0 0px 6px rgba(0, 0, 0, 0.2), 0 1.5px 1.5px rgba(0, 0, 0, 0.4);
+  line-height: 36px;
 }
 
 .v-theme--dark .text-box {
@@ -290,5 +413,4 @@ export default defineComponent({
   background-color: #0056b3;
   border-color: #0056b3;
 }
-
 </style>
