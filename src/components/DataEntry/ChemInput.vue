@@ -75,7 +75,7 @@ import {
   addPlaceholder,
   showPopup,
   hidePopup,
-} from "./ChemInputMethods.vue";
+} from "./ChemInputMethods.js";
 
 export default defineComponent({
   props: {
